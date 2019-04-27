@@ -3736,7 +3736,7 @@ input, select, textarea {
 		#wrapper > * > .inner {
 			padding: 4em 0 2em 0 ;
 			margin: 0 auto;
-			max-width: 65em;
+			/*max-width: 65em;*/
 			width: calc(100% - 6em);
 		}
 
@@ -3931,7 +3931,7 @@ input, select, textarea {
 		}
 
 
-/**/
+/*CONNEXION*/
 #connexion{
 	margin-top: 5rem;
 padding: 2em 3em;
@@ -3939,7 +3939,10 @@ border: white solid 1px;
 width: 25em;
 }
 
-
+/*PROFILE*/
+#wrapper > * > .profile{
+	max-width: auto;
+}
 
 
 

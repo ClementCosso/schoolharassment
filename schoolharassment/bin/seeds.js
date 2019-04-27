@@ -5,9 +5,7 @@
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const Eleve = require("../models/Eleve");
-const Parent = require("../models/Parent");
-const Encadrant = require("../models/Encadrant");
+const User = require("../models/User");
 const Etablissement = require("../models/Etablissement");
 
 const bcryptSalt = 10;
@@ -23,48 +21,22 @@ mongoose
     console.error("Error connecting to mongo", err);
   });
 
-let eleves = require("./seed_eleve");
-
-let parents = require("./seed_parent");
-
-let encadrants = require("./seed_encadrant");
+let users = require("./seed_user");
 
 let etablissements = require("./seed_etablissement");
 
-Eleve.deleteMany()
-  .then(() => {
-    return Parent.deleteMany();
-  })
-  .then(() => {
-    return Encadrant.deleteMany();
-  })
+User.deleteMany()
   .then(() => {
     return Etablissement.deleteMany();
   })
-  .then(() => {
-    return Promise.all([
-      Parent.create(parents),
-      Etablissement.create(etablissements)
-    ]);
+  .then(x => {
+    return Etablissement.create(etablissements);
   })
-  .then(results => {
-    let created_parents = results[0];
-    let created_etablissements = results[1];
-    eleves.forEach(elev => {
-      console.log("oko", elev);
-      elev.parent = elev.parent.map(p => created_parents[p - 1]._id);
-      elev.etablissement = created_etablissements[elev.etablissement - 1]._id;
+  .then(etablissements => {
+    users.forEach(user => {
+      user.etablissement = etablissements[user.etablissement]._id;
     });
-    return Promise.all([Eleve.create(eleves), created_etablissements]);
-  })
-
-  .then(results => {
-    let created_etablissements = results[1];
-    encadrants.forEach(encadr => {
-      encadr.etablissement =
-        created_etablissements[encadr.etablissement - 1]._id;
-    });
-    return Encadrant.create(encadrants);
+    return User.create(users);
   })
   .then(() => {
     // Close properly the connection to Mongoose
