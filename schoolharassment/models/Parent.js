@@ -8,7 +8,8 @@ const parentSchema = new Schema(
     email: String,
     telephone: String,
     etablissement: [{ type: Schema.Types.ObjectId, ref: "Etablissement" }],
-    eleve: [{ type: Schema.Types.ObjectId, ref: "Eleve" }]
+    eleve: [{ type: Schema.Types.ObjectId, ref: "Eleve" }],
+    password: { type: String, required: true }
   },
   {
     timestamps: {

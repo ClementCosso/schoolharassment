@@ -13,7 +13,8 @@ const encadrantSchema = new Schema(
       "INFIRMIER.E",
       "ASSISTANT.E D'EDUCATION"
     ],
-    telephone: String
+    telephone: String,
+    password: { type: String, required: true }
   },
   {
     timestamps: {
