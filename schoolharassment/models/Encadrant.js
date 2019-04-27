@@ -14,6 +14,11 @@ const encadrantSchema = new Schema(
       "ASSISTANT.E D'EDUCATION"
     ],
     telephone: String,
+    email: {
+      type: String,
+      match: /^.+@.+\..+$/,
+      required: true
+    },
     password: { type: String, required: true }
   },
   {

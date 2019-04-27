@@ -6,7 +6,11 @@ const eleveSchema = new Schema(
     nom: String,
     prenom: String,
     classe: String,
-    email: String,
+    email: {
+      type: String,
+      match: /^.+@.+\..+$/,
+      required: true
+    },
     genre: { type: String, enum: ["M", "F"] },
     etablissement: [{ type: Schema.Types.ObjectId, ref: "Etablissement" }],
     parent: [{ type: Schema.Types.ObjectId, ref: "Parent" }],

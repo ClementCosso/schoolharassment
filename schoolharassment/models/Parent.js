@@ -5,7 +5,11 @@ const parentSchema = new Schema(
   {
     nom: String,
     prenom: String,
-    email: String,
+    email: {
+      type: String,
+      match: /^.+@.+\..+$/,
+      required: true
+    },
     telephone: String,
     etablissement: [{ type: Schema.Types.ObjectId, ref: "Etablissement" }],
     eleve: [{ type: Schema.Types.ObjectId, ref: "Eleve" }],
