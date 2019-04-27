@@ -7,6 +7,7 @@ const eleveSchema = new Schema(
     prenom: String,
     classe: String,
     email: String,
+    genre: { type: String, enum: ["M", "F"] },
     etablissement: [{ type: Schema.Types.ObjectId, ref: "Etablissement" }],
     parent: [{ type: Schema.Types.ObjectId, ref: "Parent" }]
   },
