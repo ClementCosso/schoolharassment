@@ -1,9 +1,16 @@
 const express = require('express');
 const router  = express.Router();
+const ensureLogin = require("connect-ensure-login");
+const flash = require("connect-flash");
 
 /* GET home page */
+
 router.get('/', (req, res, next) => {
-  res.render('index');
+  if (req.isAuthenticated()) {
+      res.render('index');
+    } else {
+      res.redirect('/login');
+    }
 });
 
 module.exports = router;
