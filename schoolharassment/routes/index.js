@@ -9,7 +9,7 @@ router.get('/', (req, res, next) => {
   if (req.isAuthenticated()) {
       res.render('index');
     } else {
-      res.redirect('/login');
+      res.redirect('/auth/login');
     }
 });
 
