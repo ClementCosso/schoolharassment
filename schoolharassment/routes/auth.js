@@ -53,6 +53,8 @@ router.post("/signup", (req, res, next) => {
       res.render("auth/signup", { message: "Something went wrong" });
     })
   });
+
+  
 });
 
 router.get("/logout", (req, res) => {
