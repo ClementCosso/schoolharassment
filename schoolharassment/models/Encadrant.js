@@ -6,13 +6,16 @@ const encadrantSchema = new Schema(
     nom: String,
     prenom: String,
     etablissement: [{ type: Schema.Types.ObjectId, ref: "Etablissement" }],
-    role: [
-      "PROFESSEUR.E",
-      "CPE",
-      "PRINCIPAL.E",
-      "INFIRMIER.E",
-      "ASSISTANT.E D'EDUCATION"
-    ],
+    role: {
+      type: String,
+      enum: [
+        "PROFESSEUR.E",
+        "CPE",
+        "PRINCIPAL.E",
+        "INFIRMIER.E",
+        "ASSISTANT.E D'EDUCATION"
+      ]
+    },
     telephone: String,
     email: {
       type: String,
