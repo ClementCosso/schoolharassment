@@ -5,7 +5,7 @@ const encadrantSchema = new Schema(
   {
     nom: String,
     prenom: String,
-    etablissement: [{ type: Schema.Types.ObjectId, ref: "Etablissement" }],
+    etablissement: { type: Schema.Types.ObjectId, ref: "Etablissement" },
     role: {
       type: String,
       enum: [

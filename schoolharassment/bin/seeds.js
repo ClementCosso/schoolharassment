@@ -23,13 +23,13 @@ mongoose
     console.error("Error connecting to mongo", err);
   });
 
-let eleve = require("./seed_eleve");
+let eleves = require("./seed_eleve");
 
-let parent = require("./seed_parent");
+let parents = require("./seed_parent");
 
-let encadrant = require("./seed_encadrant");
+let encadrants = require("./seed_encadrant");
 
-let etablissement = require("./seed_etablissement");
+let etablissements = require("./seed_etablissement");
 
 Eleve.deleteMany()
   .then(() => {
@@ -41,7 +41,31 @@ Eleve.deleteMany()
   .then(() => {
     return Etablissement.deleteMany();
   })
+  .then(() => {
+    return Promise.all([
+      Parent.create(parents),
+      Etablissement.create(etablissements)
+    ]);
+  })
+  .then(results => {
+    let created_parents = results[0];
+    let created_etablissements = results[1];
+    eleves.forEach(elev => {
+      console.log("oko", elev);
+      elev.parent = elev.parent.map(p => created_parents[p - 1]._id);
+      elev.etablissement = created_etablissements[elev.etablissement - 1]._id;
+    });
+    return Promise.all([Eleve.create(eleves), created_etablissements]);
+  })
 
+  .then(results => {
+    let created_etablissements = results[1];
+    encadrants.forEach(encadr => {
+      encadr.etablissement =
+        created_etablissements[encadr.etablissement - 1]._id;
+    });
+    return Encadrant.create(encadrants);
+  })
   .then(() => {
     // Close properly the connection to Mongoose
     mongoose.disconnect();

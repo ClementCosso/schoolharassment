@@ -9,7 +9,7 @@ module.exports = [
     email: "paynehill@nimon.com",
     telephone: "+33 (827) 471-3126",
     role: "PROFESSEUR.E",
-    etablissement: "aliquip do et",
+    etablissement: 1,
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt))
   },
   {
@@ -18,7 +18,7 @@ module.exports = [
     email: "ayalalawson@nimon.com",
     telephone: "+33 (881) 409-2933",
     role: "INFIRMIER.E",
-    etablissement: "enim culpa irure",
+    etablissement: 2,
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt))
   },
   {
@@ -27,7 +27,7 @@ module.exports = [
     email: "patemaxwell@nimon.com",
     telephone: "+33 (911) 527-3411",
     role: "CPE",
-    etablissement: "elit laboris enim",
+    etablissement: 1,
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt))
   },
   {
@@ -36,7 +36,7 @@ module.exports = [
     email: "benitaatkins@nimon.com",
     telephone: "+33 (910) 532-3098",
     role: "ASSISTANT.E D'EDUCATION",
-    etablissement: "ad laborum anim",
+    etablissement: 2,
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt))
   },
   {
@@ -45,7 +45,7 @@ module.exports = [
     email: "sharononeal@nimon.com",
     telephone: "+33 (963) 495-3359",
     role: "PRINCIPAL.E",
-    etablissement: "excepteur mollit voluptate",
+    etablissement: 1,
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt))
   },
   {
@@ -54,7 +54,7 @@ module.exports = [
     email: "bonniehoward@nimon.com",
     telephone: "+33 (864) 558-2127",
     role: "PRINCIPAL.E",
-    etablissement: "sit quis aute",
+    etablissement: 2,
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt))
   }
 ];

@@ -11,8 +11,7 @@ const parentSchema = new Schema(
       required: true
     },
     telephone: String,
-    etablissement: [{ type: Schema.Types.ObjectId, ref: "Etablissement" }],
-    eleve: [{ type: Schema.Types.ObjectId, ref: "Eleve" }],
+
     password: { type: String, required: true }
   },
   {

@@ -9,8 +9,8 @@ module.exports = [
     classe: "minim",
     email: "lenoraschmidt@sultrax.com",
     gender: "female",
-    etablissement: "reprehenderit voluptate eu",
-    parent: "Fannie Benson",
+    etablissement: 2,
+    parent: [1, 3],
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt))
   },
   {
@@ -19,8 +19,8 @@ module.exports = [
     classe: "et",
     email: "bernadetteball@sultrax.com",
     gender: "female",
-    etablissement: "reprehenderit irure veniam",
-    parent: "Fitzgerald Franks",
+    etablissement: 1,
+    parent: [4, 3],
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt))
   },
   {
@@ -29,8 +29,8 @@ module.exports = [
     classe: "et",
     email: "wileysutton@sultrax.com",
     gender: "male",
-    etablissement: "consequat esse eu",
-    parent: "Luna Barker",
+    etablissement: 1,
+    parent: [2, 3],
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt))
   },
   {
@@ -39,8 +39,8 @@ module.exports = [
     classe: "tempor",
     email: "deancarlson@sultrax.com",
     gender: "male",
-    etablissement: "ea adipisicing aliquip",
-    parent: "Justine French",
+    etablissement: 2,
+    parent: [3, 2],
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt))
   },
   {
@@ -49,8 +49,8 @@ module.exports = [
     classe: "ex",
     email: "ritacontreras@sultrax.com",
     gender: "female",
-    etablissement: "consequat ad ullamco",
-    parent: "Lawson Doyle",
+    etablissement: 2,
+    parent: [5, 3],
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt))
   }
 ];

@@ -12,7 +12,7 @@ const eleveSchema = new Schema(
       required: true
     },
     genre: { type: String, enum: ["M", "F"] },
-    etablissement: [{ type: Schema.Types.ObjectId, ref: "Etablissement" }],
+    etablissement: { type: Schema.Types.ObjectId, ref: "Etablissement" },
     parent: [{ type: Schema.Types.ObjectId, ref: "Parent" }],
     password: { type: String, required: true }
   },
