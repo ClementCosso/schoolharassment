@@ -1,39 +1,86 @@
 <h2>Création de compte</h2>
 
 <form action="/auth/signup" method="POST" id="form-container">
-  <label for="username">Nom</label>
-  <input id="username" type="text" name="username" placeholder="Nom">
+  <label for="nom">Nom</label>
+  <input id="nom" type="text" name="nom" placeholder="Nom">
 
   <br><br>
 
-  <label for="name">Prénom</label>
-  <input id="name" type="text" name="name" placeholder="Prénom">
+  <label for="prenom">Prénom</label>
+  <input id="prenom" type="text" name="prenom" placeholder="Prénom">
 
   <br><br>
 
   <label for="classe">Classe</label>
-  <select name="" id="">
+  <select name="classe" id="classe">
     <option value=""></option>
   </select>
 
   <br><br>
 
-  <label for="email">Email</label>
-  <input id="email" type="text" name="email" placeholder="Email">
+  <label for="username">Email</label>
+  <input id="username" type="text" name="username" placeholder="email">
+
+  <br><br>
+
+  <label for="telephone">Telephone</label>
+  <input id="telephone" type="text" name="telephone" placeholder="telephone">
+
+  <br><br>
+
+ <label for="role">Role</label>
+  <select name="role" id="role">
+    <option value="ELEVE">ELEVE</option>
+    <option value="PROFESSEUR.E">PROFESSEUR.E</option>
+    <option value="CPE">CPE</option>
+    <option value="PRINCIPAL.E">PRINCIPAL.E</option>
+    <option value="INFIRMIER.E">INFIRMIER.E</option>
+    <option value="ASSISTANT.E D'EDUCATION">ASSISTANT.E D'EDUCATION</option>
+  </select>
 
   <br><br>
 
   <label for="genre">Genre</label>
   <select name="genre" id="genre">
-    <option value="H">H</option>
-    <option value="F">F</option>
+    <option value="male">H</option>
+    <option value="female">F</option>
   </select>
+
+  <br><br>
+
+   <input id="etablissement" type="hidden" name="etablissement" value="5cc6fe20b6b135051e8639cc">
+
+  <br><br>
+
+  <h4>Parent référent</h4>
+
+  <hr>
+
+  <label for="parent_nom">Nom</label>
+  <input id="parent_nom" type="text" name="parent_nom">
+
+  <br><br>
+
+  <label for="parent_prenom">Prénom</label>
+  <input id="parent_prenom" type="text" name="parent_prenom">
+
+  <br><br>
+
+  <label for="parent_email">Email</label>
+  <input id="parent_email" type="text" name="parent_email">
+
+  <br><br>
+
+  <label for="parent_telephone">Telephone</label>
+  <input id="parent_telephone" type="text" name="parent_telephone">
 
   <br><br>
 
   <label for="password">Mot de passe</label>
   <input id="password" type="password" name="password" placeholder="Mot de passe">
+
   <br>
+  
   {{#if message }}
     <div class="error-message">{{ message }}</div>
   {{/if}}

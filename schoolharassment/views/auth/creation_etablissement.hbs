@@ -1,0 +1,44 @@
+<h2>Création d'un établissement</h2>
+
+<form action="/auth/creation_etablissement" method="POST" id="form-container">
+
+  <label for="username">Nom</label>
+  <input id="username" type="text" name="username">
+
+  <br>
+
+  <label for="adresse">Adresse</label>
+  <input id="adresse" type="text" name="adresse">
+
+  <br>
+
+  <label for="ville">Ville</label>
+  <input id="ville" type="text" name="ville">
+
+  <br>
+
+  <label for="cp">Code postal</label>
+  <input id="cp" type="text" name="cp">
+
+  <br>
+
+  <label for="departement">Département</label>
+  <select name="departement" id="departement">
+    <option value="Gironde">Gironde</option>
+    <option value="Ain">Ain</option>
+  </select>
+
+  <br>
+
+  <label for="telephone">Telephone</label>
+  <input id="telephone" type="text" name="telephone">
+  
+  <br>
+  {{#if message }}
+    <div class="error-message">{{ message }}</div>
+  {{/if}}
+  <br>
+
+  <button>Ajouter</button>
+
+</form>

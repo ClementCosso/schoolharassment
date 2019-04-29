@@ -1,12 +1,12 @@
 <h2>Mes informations</h2>
 <hr>
 <section id="contact">
-
+{{#if user}}
 	<div class="inner profile">
 
 		<section>
-			<p>Nom</p>
-			<br>
+			<p>Nom : {{user.nom}}</p>
+			<br>{{user.etablissement}}
 			<p>Prénom</p>
 			<br>
 			<p>Classe</p>
@@ -37,4 +37,5 @@
 			</section>
 		</section>
 	</div>
+	{{/if}}
 </section>

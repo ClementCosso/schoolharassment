@@ -8,12 +8,13 @@ const userSchema = new Schema(
     nom: { type: String, required: true },
     prenom: { type: String, required: true },
     classe: { type: String },
-    email: {
+    username: {
       type: String,
       match: /^.+@.+\..+$/,
       required: true,
       unique: true
     },
+    telephone: { type: String },
     role: {
       type: String,
       enum: [
@@ -26,18 +27,19 @@ const userSchema = new Schema(
       ],
       required: true
     },
-    genre: { type: String, enum: ["male", "female"] },
-    etablissement: {
-      type: Schema.Types.ObjectId,
-      ref: "Etablissement",
-      required: true
-    },
-    parent: {
-      nom: { type: String, required: true },
-      prenom: { type: String, required: true },
-      email: { type: String, match: /^.+@.+\..+$/, required: true },
-      telephone: { type: String, required: true }
-    },
+    genre: {
+      type: String,
+      enum: [
+        "male",
+        "female"
+        ],
+        required: true
+      },
+    etablissement: [ { type: Schema.Types.ObjectId, ref: "Etablissement" } ],
+    parent_nom: { type: String },
+    parent_prenom: { type: String },
+    parent_email: { type: String },
+    parent_telephone: { type: String },
     password: { type: String, required: true }
   },
   {
