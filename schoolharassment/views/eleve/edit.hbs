@@ -1,0 +1,26 @@
+<h2>Mise à jour<h2>
+
+<form action="/eleve/edit?user_id={{user._id}}" method="POST">
+	<div>
+		<label for="telephone">Téléphone</label>
+		<input type="text" name="telephone" value="{{user.telephone}}"/>
+	</div>
+	<br>
+	<div>
+		<label for="username">Email</label>
+		<input type="text" name="username" value="{{user.username}}"/>
+	</div>
+	<br>
+	<div>
+		<label for="password">Mot de passe</label>
+		<input type="text" name="password" value="Entrez votre mot de passe"/>
+	</div>
+	<br>
+	<div>
+		 <button type="submit">Enregistrer</button>
+		 <input type="button" value="Revenir" onclick="window.history.back()" /> 
+	</div>
+
+</form>
+
+<br>

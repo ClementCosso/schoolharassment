@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const etablissementSchema = new Schema(
   {
-    username: { type: String, required: true, unique: true },
+    nom: { type: String, required: true, unique: true },
     adresse: { type: String, required: true },
     ville: { type: String, required: true },
     cp: { type: Number, required: true },

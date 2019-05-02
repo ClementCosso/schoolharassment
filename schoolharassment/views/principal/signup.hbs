@@ -1,6 +1,6 @@
-<h2>Création de compte</h2>
+<h2>Création d'un nouvel utilisateur</h2>
 
-<form action="/auth/signup" method="POST" id="form-container">
+<form action="/principal/signup" method="POST" id="form-container">
   <label for="nom">Nom</label>
   <input id="nom" type="text" name="nom" placeholder="Nom">
 
@@ -13,7 +13,11 @@
 
   <label for="classe">Classe</label>
   <select name="classe" id="classe">
-    <option value=""></option>
+    <option value="6 eme 1">6 eme 1</option>
+    <option value="6 eme 2">6 eme 2</option>
+    <option value="6 eme 3">6 eme 3</option>
+    <option value="6 eme 4">6 eme 4</option>
+    <option value="6 eme 5">6 eme 5</option>
   </select>
 
   <br><br>
@@ -48,7 +52,14 @@
 
   <br><br>
 
-   <input id="etablissement" type="hidden" name="etablissement" value="5cc6fe20b6b135051e8639cc">
+   <!-- <input id="etablissement" type="hidden" name="etablissement" value="5cc6fe20b6b135051e8639cc"> -->
+
+  <label for="etablissement">Etablissement</label>
+    <select name="etablissement" id="etablissement">
+      {{#each etablissements}}
+        <option value="{{_id}}">{{nom}}</option>
+      {{/each}}
+    </select>
 
   <br><br>
 

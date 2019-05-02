@@ -9,16 +9,12 @@
 			<br>
 			<p>Prénom : {{user.prenom}}</p>
 			<br>
-			<p>Classe : {{user.classe}}</p>
+			<p>Statut : {{user.role}}</p>
 			<br>
 			<p>Email : {{user.username}}</p>
 			<br>
 			<p>Numéro de téléphone : {{user.telephone}}</p>
-			<br>
-			<hr>
-			<br>
-			<p>Contact parent : {{user.parent_nom}} {{user.parent_prenom}} - {{user.parent_email}} - {{user.parent_telephone}}</p>
-			
+		
 		</section>
 
 		<section class="split">
@@ -35,14 +31,14 @@
 			<section>
 				<div class="contact-method">
 					<span class="icon alt fa-envelope"></span>
-					<h3><a href="/messagerie">Accéder à la messagerie</a></h3>
+					<h3><a href="/professeur/messagerie_professeur">Accéder à la messagerie</a></h3>
 				</div>
 			</section>
 
 			<section>					
 				<div class="contact-method">
 					<span class="icon alt fa-home"></span>
-					<h3><a href="#">Modifier mon profil</a></h3>
+					<h3><a href="/professeur/{{user._id}}/edit">Modifier mon profil</a></h3>
 				</div>
 			</section>
 		</section>

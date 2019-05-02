@@ -17,7 +17,9 @@
 			<br>
 			<hr>
 			<br>
-			<p>Contact parent : {{user.parent_nom}} {{user.parent_prenom}} - {{user.parent_email}} - {{user.parent_telephone}}</p>
+			<h3>Parent référent</h3>
+			<br>
+			<p>{{user.parent_nom}} {{user.parent_prenom}}<br>{{user.parent_email}}<br>{{user.parent_telephone}}</p>
 			
 		</section>
 
@@ -35,14 +37,14 @@
 			<section>
 				<div class="contact-method">
 					<span class="icon alt fa-envelope"></span>
-					<h3><a href="/messagerie">Accéder à la messagerie</a></h3>
+					<h3><a href="/eleve/messagerie_eleve">Accéder à la messagerie</a></h3>
 				</div>
 			</section>
 
 			<section>					
 				<div class="contact-method">
 					<span class="icon alt fa-home"></span>
-					<h3><a href="#">Modifier mon profil</a></h3>
+					<h3><a href="/eleve/{{user._id}}/edit">Modifier mon profil</a></h3>
 				</div>
 			</section>
 		</section>

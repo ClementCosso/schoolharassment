@@ -3,6 +3,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+
 const userSchema = new Schema(
   {
     nom: { type: String, required: true },
@@ -35,7 +36,7 @@ const userSchema = new Schema(
         ],
         required: true
       },
-    etablissement: [ { type: Schema.Types.ObjectId, ref: "Etablissement" } ],
+    etablissement: [{type: mongoose.SchemaTypes.ObjectId, ref: 'celebrity'}],
     parent_nom: { type: String },
     parent_prenom: { type: String },
     parent_email: { type: String },
