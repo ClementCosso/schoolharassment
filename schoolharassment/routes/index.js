@@ -1,3 +1,27 @@
+/*
+*******************************************************************************************
+*
+*                         T A B L E    D E S   M A T I E R E S
+*
+*******************************************************************************************
+*
+*
+*   I   - CONFIGURATION     (settings, models, middlewares)
+*
+*   II  - PAGE ACCEUIL      (lancement de l'application)
+*
+*   III - PAGE MODE EMPLOI  (mode emploi de l'application)
+*
+*   IV  - ELEVE             (définition des routes pour ELEVE)
+*
+*   V   - PROF              (définition des routes pour PROF)
+*
+*   VI  - DIRECTEUR         (définition des routes pour DIRECTEUR)
+*
+*
+*******************************************************************************************
+*/
+
 /* -------------------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------- */
 /* ------------------------------- C O N F I G U R A T I O N ---------------------------- */
@@ -17,7 +41,7 @@ const User = require("../models/User");
 const bcrypt      = require("bcrypt");
 const bcryptSalt  = 10;
 
-// ROLES
+// FONCTION ROLES
 function checkRoles(role) {
   return function(req, res, next) {
     if (req.isAuthenticated() && req.user.role === role) {
@@ -28,6 +52,7 @@ function checkRoles(role) {
   }
 }
 
+// DEFINITION DES ROLES
 const checkEleve 		  = checkRoles("ELEVE");
 const checkProfesseur = checkRoles("PROFESSEUR.E");
 const checkCPE 			  = checkRoles("CPE");        
@@ -37,7 +62,7 @@ const checkAssitant 	= checkRoles("ASSISTANT.E D'EDUCATION");
 
 /* -------------------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------- */
-/* ----------------------------- P A G E   A C C U E I L -------------------------------- */
+/* ------------------------------ P A G E   A C C U E I L ------------------------------- */
 /* -------------------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------- */
 
@@ -64,16 +89,6 @@ router.get("/mode_emploi", ensureLogin.ensureLoggedIn(), (req, res, next) => {
   res.render("mode_emploi", {layout:false});
 });
 
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* ------------------------------- M E S S A G E R I E ---------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-
-// METHOD GET PAGE MESSAGERIE
-router.get("/messagerie", ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  res.render("messagerie");
-});
 
 /* -------------------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------- */
@@ -87,9 +102,16 @@ router.get("/eleve/index_eleve", ensureLogin.ensureLoggedIn(), (req, res, next) 
 });
 
 // METHOD GET PAGE PROFILE
-router.get('/eleve/profile_eleve', checkEleve, ensureLogin.ensureLoggedIn(), (req, res) => {
-  res.render('eleve/profile_eleve', {layout: 'layout_eleve.hbs', user: req.user});
+router.get('/eleve/:id/profile_eleve', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+  User.findOne({_id: req.params.id}) 
+  .then(user => {
+    Etablissement.find({_id : {$eq: user.etablissement}})
+    .then(etablissements => {
+      res.render('eleve/profile_eleve', {layout: 'layout_eleve.hbs', user: user, etablissements:etablissements});
+    })
+  })
 });
+
 
 // METHOD GET EDIT PROFILE
 router.get('/eleve/:id/edit', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
@@ -102,6 +124,7 @@ router.get('/eleve/:id/edit', checkEleve, ensureLogin.ensureLoggedIn(), (req, re
   	})
 });
 
+
 // METHOD POST EDIT PROFILE
 router.post('/eleve/edit', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
 
@@ -112,7 +135,7 @@ router.post('/eleve/edit', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, 
 
   User.update({_id: req.query.user_id}, {$set: {telephone, username, password:hashPass}})
   .then((user) => {
-    res.redirect('/eleve/profile_eleve');
+    res.redirect('/eleve/'+req.query.user_id+'/profile_eleve');
   })
 });
 
@@ -133,8 +156,14 @@ router.get("/professeur/index_professeur", ensureLogin.ensureLoggedIn(), (req, r
 });
 
 // METHOD GET PAGE PROFILE
-router.get('/professeur/profile_professeur', checkProfesseur, ensureLogin.ensureLoggedIn(), (req, res) => {
-  res.render('professeur/profile_professeur', {layout: 'layout_professeur.hbs', user: req.user});
+router.get('/professeur/:id/profile_professeur', checkProfesseur, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+  User.findOne({_id: req.params.id}) 
+  .then(user => {
+    Etablissement.find({_id : {$eq: user.etablissement}})
+    .then(etablissements => {
+      res.render('professeur/profile_professeur', {layout: 'layout_professeur.hbs', user: user, etablissements:etablissements});
+    })
+  })
 });
 
 // METHOD GET EDIT PROFILE
@@ -158,7 +187,7 @@ router.post('/professeur/edit', checkProfesseur, ensureLogin.ensureLoggedIn(), (
 
   User.update({_id: req.query.user_id}, {$set: {telephone, username, password:hashPass}})
   .then((user) => {
-    res.redirect('/professeur/profile_professeur');
+    res.redirect('/professeur/'+req.query.user_id+'/profile_professeur');
   })
 });
 
@@ -179,8 +208,14 @@ router.get("/principal/index_principal", ensureLogin.ensureLoggedIn(), (req, res
 });
 
 // METHOD GET PAGE PROFILE
-router.get('/principal/profile_principal', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res) => {
-  res.render('principal/profile_principal', {layout: 'layout_principal.hbs', user: req.user});
+router.get('/principal/:id/profile_principal', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+  User.findOne({_id: req.params.id}) 
+  .then(user => {
+    Etablissement.find({_id : {$eq: user.etablissement}})
+    .then(etablissements => {
+      res.render('principal/profile_principal', {layout: 'layout_principal.hbs', user: user, etablissements:etablissements});
+    })
+  })
 });
 
 // METHOD GET EDIT PROFILE
@@ -204,7 +239,7 @@ router.post('/principal/edit', checkPrincipal, ensureLogin.ensureLoggedIn(), (re
 
   User.update({_id: req.query.user_id}, {$set: {telephone, username, password:hashPass}})
   .then((user) => {
-    res.redirect('/principal/profile_principal');
+    res.redirect('/principal/'+req.query.user_id+'/profile_principal');
   })
 });
 
@@ -213,7 +248,53 @@ router.get("/principal/messagerie_principal", checkPrincipal, ensureLogin.ensure
   res.render("principal/messagerie_principal", {layout: 'layout_principal.hbs', user: req.user});
 });
 
-// METHOD GET PAGE EDITION UTILISATEUR
+// METHOD GET PAGE LISTE UTILISATEUR
+router.get('/principal/liste_utilisateur', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+  User.find()
+    .then(users => {
+      res.render('principal/liste_utilisateur', {layout: 'layout_principal.hbs', users: users});
+    })
+    .catch(error => {
+      console.log('Error while getting the users from the DB: ', error);
+    })
+});
+
+// METHOD GET MODIFICATION D'UN UTILISATEUR
+router.get('/principal/:id/update_user', (req, res, next) => {
+  User.findOne({_id: req.params.id}) 
+  .then(user => {
+      res.render('principal/update_user', {layout: 'layout_principal.hbs', user: user});
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+});
+
+// METHOD POST MODIFICATION D'UN UTILISATEUR
+router.post('/principal/update_user', (req, res, next) => {
+  const { nom, prenom, username, telephone, role, genre, classe, parent_nom, parent_prenom, parent_email, parent_telephone, password } = req.body;
+
+  const salt = bcrypt.genSaltSync(bcryptSalt);
+  const hashPass = bcrypt.hashSync(password, salt);
+
+  User.update({_id: req.query.user_id}, {$set: {nom, prenom, username, telephone, role, genre, classe, parent_nom, parent_prenom, parent_email, parent_telephone, password:hashPass}})
+  .then((user) => {
+    res.redirect('/principal/liste_utilisateur');
+  })
+});
+
+// METHOD DELETE UTILISATEUR
+router.post('/principal/:id/delete_user', function(req, res){
+  User.findByIdAndRemove({_id: req.params.id}) 
+  .then((user) => {
+    res.redirect('/principal/liste_utilisateur');
+  })
+  .catch((error) => {
+    console.log(error);
+  })
+});
+
+// METHOD GET CREATION UTILISATEUR
 router.get("/principal/signup", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
   Etablissement.find()
   .then(etablissements => {
@@ -221,8 +302,7 @@ router.get("/principal/signup", checkPrincipal, ensureLogin.ensureLoggedIn(), (r
   })
 });
 
-
-// METHOD POST PAGE SIGNUP
+// METHOD POST CREATION UTILISATEUR
 router.post("/principal/signup", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
 
   const nom               = req.body.nom;
@@ -282,12 +362,52 @@ router.post("/principal/signup", checkPrincipal, ensureLogin.ensureLoggedIn(), (
   
 });
 
-// METHOD GET PAGE EDITION ETABLISSEMENT
+// METHOD GET PAGE LISTE ETABLISSEMENT
+router.get('/principal/liste_etablissement', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+  Etablissement.find()
+    .then(etablissements => {
+      res.render('principal/liste_etablissement', {layout: 'layout_principal.hbs', etablissements: etablissements});
+    })
+    .catch(error => {
+      console.log('Error while getting the etablissements from the DB: ', error);
+    })
+});
+
+// METHOD GET PAGE MODIFICATION D'UN ETABLISSEMENT
+router.get('/principal/:id/update_etablissement', (req, res, next) => {
+  Etablissement.findOne({_id: req.params.id}) 
+  .then(etablissement => {
+      res.render('principal/update_etablissement', {layout: 'layout_principal.hbs', etablissement: etablissement});
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+});
+
+router.post('/principal/:id/update_etablissement', (req, res, next) => {
+  Etablissement.updateOne({_id: req.params.id}, {$set: req.body})
+  .then(etablissement => {
+    res.redirect('/principal/liste_etablissement');
+  })
+});
+
+// METHOD DELETE ETABLISSEMENT
+router.post('/principal/:id/delete', function(req, res){
+  Etablissement.findByIdAndRemove({_id: req.params.id}) 
+  .then((etablissement) => {
+    res.redirect('/principal/liste_etablissement');
+  })
+  .catch((error) => {
+    console.log(error);
+  })
+});
+
+// METHOD GET PAGE CREATION ETABLISSEMENT
 router.get("/principal/creation_etablissement", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
     res.render('principal/creation_etablissement', {layout: 'layout_principal.hbs'});
 });
 
-// METHOD POST PAGE AJOUT ETABLISSEMENT
+// METHOD POST PAGE CREATION ETABLISSEMENT
 router.post('/principal/creation_etablissement', (req, res, next) => {
 
   const nom         = req.body.nom;

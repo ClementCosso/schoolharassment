@@ -1,0 +1,46 @@
+<h2>Mise à jour de l'établissement<h2>
+
+<form action="/principal/{{etablissement._id}}/update_etablissement" method="POST">
+	
+	<div>
+		<label for="nom">Nom</label>
+		<br>
+		<input type="text" name="nom" value="{{etablissement.nom}}"/>
+	</div>
+	<br>
+	<div>
+		<label for="adresse">Adresse</label>
+		<br>
+		<input type="text" name="adresse" value="{{etablissement.adresse}}"/>
+	</div>
+	<br>
+	<div>
+		<label for="ville">Ville</label>
+		<br>
+		<input type="text" name="ville" value="{{etablissement.ville}}"/>
+	</div>
+	<br>
+	<div>
+		<label for="cp">Code postal</label>
+		<br>
+		<input type="text" name="cp" value="{{etablissement.cp}}"/>
+	</div>
+	<br>
+	<div>
+		<label for="departement">Département</label>
+		<br>
+		<input type="text" name="departement" value="{{etablissement.departement}}"/>
+	</div>
+  	<br>
+  	<div>
+		<label for="telephone">Telephone</label>
+		<br>
+		<input type="text" name="telephone" value="{{etablissement.telephone}}"/>
+	</div>
+	<br>
+	<div>
+		<input type="submit" value="Valider">
+		<input type="button" value="Revenir" onclick="window.history.back()" />
+	</div>
+
+</form>

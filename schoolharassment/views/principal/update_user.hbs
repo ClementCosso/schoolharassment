@@ -1,0 +1,97 @@
+<h2>Mise à jour d'un utilisateur<h2>
+
+<form action="/principal/update_user?user_id={{user._id}}" method="POST">
+	
+	<div>
+		<label for="nom">Nom</label>
+		<br>
+		<input type="text" name="nom" value="{{user.nom}}"/>
+	</div>
+	<br>
+	<div>
+		<label for="prenom">Prénom</label>
+		<br>
+		<input type="text" name="prenom" value="{{user.prenom}}"/>
+	</div>
+	<br>
+	<div>
+		<label for="username">Email</label>
+		<br>
+		<input type="text" name="username" value="{{user.username}}"/>
+	</div>
+	<br>
+  	<div>
+		<label for="telephone">Telephone</label>
+		<br>
+		<input type="text" name="telephone" value="{{user.telephone}}"/>
+	</div>
+	<br>
+	<div>
+		<label for="role">Role</label>
+  			<select name="role" id="role">
+    			<option value="ELEVE">ELEVE</option>
+			    <option value="PROFESSEUR.E">PROFESSEUR.E</option>
+			    <option value="CPE">CPE</option>
+			    <option value="PRINCIPAL.E">PRINCIPAL.E</option>
+			    <option value="INFIRMIER.E">INFIRMIER.E</option>
+			    <option value="ASSISTANT.E D'EDUCATION">ASSISTANT.E D'EDUCATION</option>
+  			</select>
+	</div>
+	<br>
+	<div>
+		<label for="genre">Genre</label>
+  			<select name="genre" id="genre">
+    			<option value="female">F</option>
+			    <option value="male">H</option>
+  			</select>
+	</div>
+	<br>
+	<div id="informations_eleve">
+		<div>
+			<label for="classe">Classe</label>
+	  			<select name="classe" id="classe">
+	    			<option value="6 eme 1">6 eme 1</option>
+	    			<option value="6 eme 2">6 eme 2</option>
+	    			<option value="6 eme 3">6 eme 3</option>
+	    			<option value="6 eme 4">6 eme 4</option>
+	    			<option value="6 eme 5">6 eme 5</option>
+	  			</select>
+		</div>
+		<br>
+		<div>
+			<label for="parent_nom">Nom du parent</label>
+			<br>
+			<input type="text" name="parent_nom" value="{{user.parent_nom}}"/>
+		</div>
+		<br>
+		<div>
+			<label for="parent_prenom">Prénom du parent</label>
+			<br>
+			<input type="text" name="parent_prenom" value="{{user.parent_prenom}}"/>
+		</div>
+		<br>
+		<div>
+			<label for="parent_email">Email du parent</label>
+			<br>
+			<input type="text" name="parent_email" value="{{user.parent_email}}"/>
+		</div>
+		<br>
+		<div>
+			<label for="parent_telephone">Téléphone du parent</label>
+			<br>
+			<input type="text" name="parent_telephone" value="{{user.parent_telephone}}"/>
+		</div>
+	</div>
+	<br>
+	<div>
+		<label for="password">Mot de passe</label>
+		<br>
+		<input type="text" name="password" value="Veuillez saisir un mot de passe par défaut"/>
+	</div>
+	<br>
+	<div>
+		<input type="submit" value="Valider">
+		<input type="button" value="Revenir" onclick="window.history.back()" />
+	</div>
+
+</form>

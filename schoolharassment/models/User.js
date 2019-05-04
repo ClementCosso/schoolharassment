@@ -36,7 +36,7 @@ const userSchema = new Schema(
         ],
         required: true
       },
-    etablissement: [{type: mongoose.SchemaTypes.ObjectId, ref: 'celebrity'}],
+    etablissement: [{type: mongoose.SchemaTypes.ObjectId, ref: 'Etablissement'}],
     parent_nom: { type: String },
     parent_prenom: { type: String },
     parent_email: { type: String },

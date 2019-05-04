@@ -27,10 +27,16 @@
 
 			<section>
 				<div class="contact-method">
-					<span>Mon établissement</span>
+					<h3>Mon établissement</h3>
 					<br>
-					<br>
-					<h3>{{user.etablissement}}</h3>
+					{{#each etablissements}}
+					<p>
+						{{nom}}<br>
+						{{adresse}}<br>
+						{{cp}} {{ville}}<br>
+						{{telephone}}
+					</p>
+					{{/each}}
 				</div>
 			</section>
 
