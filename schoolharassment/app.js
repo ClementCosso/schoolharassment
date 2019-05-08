@@ -74,10 +74,16 @@ app.use(
 app.use(flash());
 require("./passport")(app);
 
-const index = require("./routes/index");
-app.use("/", index);
-
 const authRoutes = require("./routes/auth");
 app.use("/auth", authRoutes);
+
+const routeur_eleve = require("./routes/routeur_eleve");
+app.use("/", routeur_eleve);
+
+const routeur_principal = require("./routes/routeur_principal");
+app.use("/", routeur_principal);
+
+const routeur_professeur = require("./routes/routeur_professeur");
+app.use("/", routeur_professeur);
 
 module.exports = app;

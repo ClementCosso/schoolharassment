@@ -1,9 +1,9 @@
 /*
-*******************************************************************************************
+******************************************************************************************************************************
+*                                                                       
+*                                           T A B L E    D E S   M A T I E R E S
 *
-*                         T A B L E    D E S   M A T I E R E S
-*
-*******************************************************************************************
+******************************************************************************************************************************
 *
 *
 *   I   - CONFIGURATION     (settings, models, middlewares)
@@ -12,21 +12,56 @@
 *
 *   III - PAGE MODE EMPLOI  (mode emploi de l'application - à definir)
 *
-*   IV  - ELEVE             (définition des routes pour ELEVE)
+*   IV  - ROUTES PRINCIPAL  (définition des routes et methods)
+*         
+*         1/ INDEX
 *
-*   V   - PROF              (définition des routes pour PROF)
+*               a) METHOD GET PAGE INDEX
 *
-*   VI  - DIRECTEUR         (définition des routes pour DIRECTEUR)
+*         2/ PROFILE
+*
+*               a) METHOD GET PAGE PROFILE
+*               b) METHOD GET PAGE UPDATE PROFILE
+*               c) METHOD POST UPDATE PROFILE
+*
+*         3/ UTILISATEURS
+* 
+*               a) METHOD GET PAGE LISTE UTILISATEUR
+*               b) METHOD GET PAGE UPDATE UTILISATEUR
+*               c) METHOD POST UPDATE UTILISATEUR
+*               d) METHOD POST DELETE UTILISATEUR
+*               e) METHOD GET PAGE CREATION UTILISATEUR
+*               f) METHOD POST CREATION UTILISATEUR
+*
+*         4/ ETABLISSEMENTS
+*
+*               a) METHOD GET PAGE LISTE ETABLISSEMENT
+*               b) METHOD GET PAGE UPDATE ETABLISSEMENT
+*               c) METHOD POST PAGE UPDATE ETABLISSEMENT
+*               d) METHOD POST DELETE ETABLISSEMENT
+*               e) METHOD GET PAGE CREATION ETABLISSEMENT
+*               f) METHOD POST CREATION ETABLISSEMENT
+*         
+*         5/ MESSAGERIE
+*
+*               a) METHOD GET PAGE MESSAGERIE
+*               b) METHOD GET PAGE NOUVEAU MESSAGE
+*               c) METHOD POST NOUVEAU MESSAGE
+*               d) METHOD POST MESSAGE LU
+*               e) METHOD POST SUPPRESSION MESSAGE
+*               f) METHOD GET REPONSE MESSAGE
+*               g) METHOD POST REPONSE MESSAGE
 *
 *
-*******************************************************************************************
+******************************************************************************************************************************
 */
 
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* ------------------------------- C O N F I G U R A T I O N ---------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------  I - C O N F I G U R A T I O N  --------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
 
 const express   = require('express');
 const router  = express.Router();
@@ -54,19 +89,16 @@ function checkRoles(role) {
   }
 }
 
-// DEFINITION DES ROLES
-const checkEleve 		  = checkRoles("ELEVE");
-const checkProfesseur = checkRoles("PROFESSEUR.E");
-const checkCPE 			  = checkRoles("CPE");        
+// DEFINITION DES ROLES     
 const checkPrincipal 	= checkRoles("PRINCIPAL.E");
-const checkInfirmier 	= checkRoles("INFIRMIER.E");
-const checkAssitant 	= checkRoles("ASSISTANT.E D'EDUCATION");
 
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* ------------------------------ P A G E   A C C U E I L ------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------  II - P A G E   A C C U E I L  ---------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
 
 // METHOD GET PAGE ACCEUIL
 /*
@@ -80,11 +112,13 @@ router.get('/', (req, res, next) => {
     }
 });
 
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* ------------------------ P A G E   M O D E   E M P L O I ----------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------  III - P A G E   M O D E   E M P L O I  ----------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
 
 // METHOD GET PAGE MODE EMPLOI
 router.get("/mode_emploi", ensureLogin.ensureLoggedIn(), (req, res, next) => {
@@ -92,273 +126,31 @@ router.get("/mode_emploi", ensureLogin.ensureLoggedIn(), (req, res, next) => {
 });
 
 
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* ------------------------------------ E L E V E --------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-
-// METHOD GET INDEX PAGE
-router.get("/eleve/index_eleve", ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  res.render("eleve/index_eleve", {layout: 'layout_eleve.hbs', user: req.user});
-});
-
-// METHOD GET PAGE PROFILE
-router.get('/eleve/:id/profile_eleve', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  User.findOne({_id: req.params.id}) 
-  .then(user => {
-    Etablissement.find({_id : {$eq: user.etablissement}})
-    .then(etablissements => {
-      res.render('eleve/profile_eleve', {layout: 'layout_eleve.hbs', user: user, etablissements:etablissements});
-    })
-  })
-});
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* ---------------------------------------- IV - R O U T E S   P R I N C I P A L ------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------- */
 
 
-// METHOD GET EDIT PROFILE
-router.get('/eleve/:id/edit', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-	User.findOne({_id: req.params.id}) 
-	.then(user => {
-      res.render('eleve/edit', {layout: 'layout_eleve.hbs', user: user});
-    })
-  	.catch((error) => {
-    	console.log(error);
-  	})
-});
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                      1/ I N D E X                                                        //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// METHOD POST EDIT PROFILE
-router.post('/eleve/edit', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+// a) METHOD GET PAGE INDEX
 
-	const { telephone, username, password } = req.body;
-
-	const salt = bcrypt.genSaltSync(bcryptSalt);
-	const hashPass = bcrypt.hashSync(password, salt);
-
-  User.update({_id: req.query.user_id}, {$set: {telephone, username, password:hashPass}})
-  .then((user) => {
-    res.redirect('/eleve/'+req.query.user_id+'/profile_eleve');
-  })
-});
-
-
-// METHOD GET PAGE MESSAGERIE
-router.get("/eleve/:id/messagerie_eleve", checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  User.findOne({_id: req.params.id}) 
-  .then(user => {
-    Message.find({emetteur: { $eq: user._id }})
-    .then(message_emis => {
-      User.find()
-      .then(users => {
-        Message.find({$and: [ {lu: { $eq: 'OUI' }} , {recepteur: { $eq: user._id }} ] })
-        .then(message_lu => {
-          Message.find({$and: [ {lu: { $eq: 'NON' }} , {recepteur: { $eq: user._id }} ] })
-          .then(message_non_lu => {
-            res.render('eleve/messagerie_eleve', {layout: 'layout_eleve.hbs', user: user, message_emis: message_emis, users: users, message_lu: message_lu, message_non_lu: message_non_lu});
-         })
-        })
-      })
-    })
-  })
-});
-
-// METHOD GET ENVOI MESSAGE
-router.get("/eleve/:id/creation_message", checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  User.find({role: {$ne: 'ELEVE'}})
-    .then(users => {
-      res.render('eleve/creation_message', {layout: 'layout_eleve.hbs', users: users, user: req.user});
-    })
-    .catch(error => {
-      console.log('Error while getting the users from the DB: ', error);
-    })
-});
-
-// METHOD POST ENVOI MESSAGE
-router.post('/eleve/creation_message', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-
-  const emetteur  = req.body.emetteur;
-  const recepteur = req.body.recepteur;
-  const sujet     = req.body.sujet;
-  const contenu   = req.body.contenu;
-  const statut    = req.body.statut;
-  const lu        = req.body.lu;
-
-  if (sujet === "" || contenu === "") {
-    res.render("eleve/creation_message", { message: "Veuillez remplir tous les champs" });
-    return;
-  }
-
-  Message.findOne({ contenu }, "contenu", (err, message) => {
-    if (message !== null) {
-      res.render("eleve/creation_message", { message: "The message already exists" });
-      return;
-    }
-
-    const newMessage = new Message({
-      emetteur,
-      recepteur,
-      sujet,
-      contenu,
-      statut,
-      lu
-    });
-
-    newMessage.save()
-    .then(() => {
-      res.redirect("/eleve/"+emetteur+"/messagerie_eleve");
-    })
-    .catch(err => {
-      res.render("eleve/creation_message", { message: "Something went wrong" });
-    })
-  });
-
-});
-
-// METHOD POST MESSAGE LU
-router.post('/eleve/:id/message_lu', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-
-  const lu = req.body.lu;
-
-  Message.findOneAndUpdate( {_id: req.params.id}, {$set: {lu : 'OUI'} } )
-  .then((user) => {
-    res.redirect('back');
-  })
-
-});
-
-
-// METHOD SUPPRESSION MESSAGE
-router.post('/eleve/:id/delete_message', checkEleve, ensureLogin.ensureLoggedIn(), function(req, res){
-  Message.findByIdAndRemove({_id: req.params.id}) 
-  .then((message) => {
-    res.redirect('back');
-  })
-  .catch((error) => {
-    console.log(error);
-  })
-});
-
-// METHOD GET REPONSE MESSAGE
-router.get('/eleve/:id/reponse_message', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  const lu = req.body.lu;
-  Message.findOneAndUpdate( {_id: req.params.id}, {$set: {lu : 'OUI'} } )
-  .then((message) =>
-    Message.findOne({_id: req.params.id}) 
-    .then(reponse_message => {
-      res.render('eleve/reponse_message', {layout: 'layout_eleve.hbs', reponse_message: reponse_message, message: message});
-    })
-  )
-  .catch((error) => {
-    console.log(error);
-  })
-});
-
-// METHOD POST REPONSE MESSAGE
-router.post('/eleve/reponse_message', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-
-  const emetteur  = req.body.emetteur;
-  const recepteur = req.body.recepteur;
-  const sujet     = req.body.sujet;
-  const contenu   = req.body.contenu;
-  const statut    = req.body.statut;
-  const lu        = req.body.lu;
-
-  if (sujet === "" || contenu === "") {
-    res.render("eleve/reponse_message", { message: "Veuillez remplir tous les champs" });
-    return;
-  }
-
-  Message.findOne({ contenu }, "contenu", (err, message) => {
-    if (message !== null) {
-      res.render("eleve/reponse_message", { message: "The message already exists" });
-      return;
-    }
-
-    const newMessage = new Message({
-      emetteur,
-      recepteur,
-      sujet,
-      contenu,
-      statut,
-      lu
-    });
-
-    newMessage.save()
-    .then(() => {
-      res.redirect("/eleve/"+emetteur+"/messagerie_eleve");
-    })
-    .catch(err => {
-      res.render("eleve/reponse_message", { message: "Something went wrong" });
-    })
-  });
-
-});
-
-
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* ------------------------------------ P R O F ----------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-
-// METHOD GET INDEX PAGE
-router.get("/professeur/index_professeur", ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  res.render("professeur/index_professeur", {layout: 'layout_professeur.hbs', user: req.user});
-});
-
-// METHOD GET PAGE PROFILE
-router.get('/professeur/:id/profile_professeur', checkProfesseur, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  User.findOne({_id: req.params.id}) 
-  .then(user => {
-    Etablissement.find({_id : {$eq: user.etablissement}})
-    .then(etablissements => {
-      res.render('professeur/profile_professeur', {layout: 'layout_professeur.hbs', user: user, etablissements:etablissements});
-    })
-  })
-});
-
-// METHOD GET EDIT PROFILE
-router.get('/professeur/:id/edit', checkProfesseur, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  User.findOne({_id: req.params.id}) 
-  .then(user => {
-      res.render('professeur/edit',{layout: 'layout_professeur.hbs', user: user});
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-});
-
-// METHOD POST EDIT PROFILE
-router.post('/professeur/edit', checkProfesseur, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-
-  const { telephone, username, password } = req.body;
-
-  const salt = bcrypt.genSaltSync(bcryptSalt);
-  const hashPass = bcrypt.hashSync(password, salt);
-
-  User.update({_id: req.query.user_id}, {$set: {telephone, username, password:hashPass}})
-  .then((user) => {
-    res.redirect('/professeur/'+req.query.user_id+'/profile_professeur');
-  })
-});
-
-// METHOD GET PAGE MESSAGERIE
-router.get("/professeur/messagerie_professeur", checkProfesseur, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  res.render("professeur/messagerie_professeur", {layout: 'layout_professeur.hbs', user: req.user});
-});
-
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-/* ------------------------------- D I R E C T E U R ------------------------------------ */
-/* -------------------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------------------- */
-
-// METHOD GET INDEX PAGE
 router.get("/principal/index_principal", ensureLogin.ensureLoggedIn(), (req, res, next) => {
   res.render("principal/index_principal", {layout: 'layout_principal.hbs', user: req.user});
 });
 
-// METHOD GET PAGE PROFILE
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                    2/ P R O F I L E                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// a) METHOD GET PAGE PROFILE
 router.get('/principal/:id/profile_principal', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
   User.findOne({_id: req.params.id}) 
   .then(user => {
@@ -369,7 +161,7 @@ router.get('/principal/:id/profile_principal', checkPrincipal, ensureLogin.ensur
   })
 });
 
-// METHOD GET EDIT PROFILE
+// b) METHOD GET PAGE UPDATE PROFILE
 router.get('/principal/:id/edit', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
   User.findOne({_id: req.params.id}) 
   .then(user => {
@@ -380,7 +172,7 @@ router.get('/principal/:id/edit', checkPrincipal, ensureLogin.ensureLoggedIn(), 
     })
 });
 
-// METHOD POST EDIT PROFILE
+// c) METHOD POST UPDATE PROFILE
 router.post('/principal/edit', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
 
   const { telephone, username, password } = req.body;
@@ -394,7 +186,13 @@ router.post('/principal/edit', checkPrincipal, ensureLogin.ensureLoggedIn(), (re
   })
 });
 
-// METHOD GET PAGE LISTE UTILISATEUR
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                             3/ U T I L I S A T E U R S                                                   //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// a) METHOD GET PAGE LISTE UTILISATEUR
 router.get('/principal/liste_utilisateur', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
   User.find()
     .then(users => {
@@ -405,7 +203,7 @@ router.get('/principal/liste_utilisateur', checkPrincipal, ensureLogin.ensureLog
     })
 });
 
-// METHOD GET MODIFICATION D'UN UTILISATEUR
+// b) METHOD GET PAGE UPDATE UTILISATEUR
 router.get('/principal/:id/update_user', (req, res, next) => {
   User.findOne({_id: req.params.id}) 
   .then(user => {
@@ -416,7 +214,7 @@ router.get('/principal/:id/update_user', (req, res, next) => {
     })
 });
 
-// METHOD POST MODIFICATION D'UN UTILISATEUR
+// c) METHOD POST UPDATE UTILISATEUR
 router.post('/principal/update_user', (req, res, next) => {
   const { nom, prenom, username, telephone, role, genre, classe, parent_nom, parent_prenom, parent_email, parent_telephone, password } = req.body;
 
@@ -429,7 +227,7 @@ router.post('/principal/update_user', (req, res, next) => {
   })
 });
 
-// METHOD DELETE UTILISATEUR
+// d) METHOD POST DELETE UTILISATEUR
 router.post('/principal/:id/delete_user', function(req, res){
   User.findByIdAndRemove({_id: req.params.id}) 
   .then((user) => {
@@ -440,7 +238,7 @@ router.post('/principal/:id/delete_user', function(req, res){
   })
 });
 
-// METHOD GET CREATION UTILISATEUR
+// e) METHOD GET PAGE CREATION UTILISATEUR
 router.get("/principal/signup", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
   Etablissement.find()
   .then(etablissements => {
@@ -448,7 +246,7 @@ router.get("/principal/signup", checkPrincipal, ensureLogin.ensureLoggedIn(), (r
   })
 });
 
-// METHOD POST CREATION UTILISATEUR
+// f) METHOD POST CREATION UTILISATEUR
 router.post("/principal/signup", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
 
   const nom               = req.body.nom;
@@ -508,7 +306,13 @@ router.post("/principal/signup", checkPrincipal, ensureLogin.ensureLoggedIn(), (
   
 });
 
-// METHOD GET PAGE LISTE ETABLISSEMENT
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                           4/ E T A B L I S S E M E N T S                                                 //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// a) METHOD GET PAGE LISTE ETABLISSEMENT
 router.get('/principal/liste_etablissement', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
   Etablissement.find()
     .then(etablissements => {
@@ -519,7 +323,7 @@ router.get('/principal/liste_etablissement', checkPrincipal, ensureLogin.ensureL
     })
 });
 
-// METHOD GET PAGE MODIFICATION D'UN ETABLISSEMENT
+// b) METHOD GET PAGE UPDATE ETABLISSEMENT
 router.get('/principal/:id/update_etablissement', (req, res, next) => {
   Etablissement.findOne({_id: req.params.id}) 
   .then(etablissement => {
@@ -530,7 +334,7 @@ router.get('/principal/:id/update_etablissement', (req, res, next) => {
     })
 });
 
-// METHOD POST PAGE MODIFICATION D'UN ETABLISSEMENT
+// c) METHOD POST PAGE UPDATE ETABLISSEMENT
 router.post('/principal/:id/update_etablissement', (req, res, next) => {
   Etablissement.updateOne({_id: req.params.id}, {$set: req.body})
   .then(etablissement => {
@@ -538,7 +342,7 @@ router.post('/principal/:id/update_etablissement', (req, res, next) => {
   })
 });
 
-// METHOD DELETE ETABLISSEMENT
+// d) METHOD POST DELETE ETABLISSEMENT
 router.post('/principal/:id/delete', function(req, res){
   Etablissement.findByIdAndRemove({_id: req.params.id}) 
   .then((etablissement) => {
@@ -549,12 +353,12 @@ router.post('/principal/:id/delete', function(req, res){
   })
 });
 
-// METHOD GET PAGE CREATION ETABLISSEMENT
+// e) METHOD GET PAGE CREATION ETABLISSEMENT
 router.get("/principal/creation_etablissement", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
     res.render('principal/creation_etablissement', {layout: 'layout_principal.hbs'});
 });
 
-// METHOD POST PAGE CREATION ETABLISSEMENT
+// f) METHOD POST CREATION ETABLISSEMENT
 router.post('/principal/creation_etablissement', (req, res, next) => {
 
   const nom         = req.body.nom;
@@ -595,9 +399,13 @@ router.post('/principal/creation_etablissement', (req, res, next) => {
 
 });
 
-// MESSAGERIE
 
-// METHOD GET PAGE MESSAGERIE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                5/ M E S S A G E R I E                                                    //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// a) METHOD GET PAGE MESSAGERIE
 router.get("/principal/:id/messagerie_principal", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
   User.findOne({_id: req.params.id}) 
   .then(user => {
@@ -617,7 +425,7 @@ router.get("/principal/:id/messagerie_principal", checkPrincipal, ensureLogin.en
   })
 });
 
-// METHOD GET ENVOI MESSAGE
+// b) METHOD GET NOUVEAU MESSAGE
 router.get("/principal/:id/creation_message", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
   User.find()
     .then(users => {
@@ -628,7 +436,7 @@ router.get("/principal/:id/creation_message", checkPrincipal, ensureLogin.ensure
     })
 });
 
-// METHOD POST ENVOI MESSAGE
+// c) METHOD POST NOUVEAU MESSAGE
 router.post('/principal/creation_message', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
 
   const emetteur  = req.body.emetteur;
@@ -669,7 +477,7 @@ router.post('/principal/creation_message', checkPrincipal, ensureLogin.ensureLog
 
 });
 
-// METHOD POST MESSAGE LU
+// d) METHOD POST MESSAGE LU
 router.post('/principal/:id/message_lu', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
   const lu = req.body.lu;
   Message.findOneAndUpdate( {_id: req.params.id}, {$set: {lu : 'OUI'} } )
@@ -679,7 +487,7 @@ router.post('/principal/:id/message_lu', checkPrincipal, ensureLogin.ensureLogge
 
 });
 
-// METHOD SUPPRESSION MESSAGE
+// e) METHOD SUPPRESSION MESSAGE
 router.post('/principal/:id/delete_message', checkPrincipal, ensureLogin.ensureLoggedIn(), function(req, res){
   Message.findByIdAndRemove({_id: req.params.id}) 
   .then((message) => {
@@ -690,7 +498,7 @@ router.post('/principal/:id/delete_message', checkPrincipal, ensureLogin.ensureL
   })
 });
 
-// METHOD GET REPONSE MESSAGE
+// f) METHOD GET REPONSE MESSAGE
 router.get('/principal/:id/reponse_message', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
   const lu = req.body.lu;
   Message.findOneAndUpdate( {_id: req.params.id}, {$set: {lu : 'OUI'} } )
@@ -705,7 +513,7 @@ router.get('/principal/:id/reponse_message', checkPrincipal, ensureLogin.ensureL
   })
 });
 
-// METHOD POST REPONSE MESSAGE
+// g) METHOD POST REPONSE MESSAGE
 router.post('/principal/reponse_message', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
 
   const emetteur  = req.body.emetteur;
@@ -745,5 +553,11 @@ router.post('/principal/reponse_message', checkPrincipal, ensureLogin.ensureLogg
   });
 
 });
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 module.exports = router;
