@@ -1,0 +1,34 @@
+<h2>Nouveau message<h2>
+
+<form action="/principal/creation_message" method="POST" id="form-container">
+
+	<input id="emetteur" type="hidden" name="emetteur" value="{{user._id}}">
+    <input id="statut" type="hidden" name="statut" value="EMIS">
+    <input id="lu" type="hidden" name="lu" value="NON">
+
+    <label for="recepteur">Destinataire</label>
+    <select name="recepteur" id="recepteur">
+  	  {{#each users}}
+  	  <option value="{{_id}}">{{role}} - {{nom}}</option>
+	  {{/each}}
+    </select>
+
+    <br>
+    
+    <label for="sujet">Sujet</label>
+    <input id="sujet" type="text" name="sujet">
+
+    <br>
+
+    <label for="contenu">Votre message</label>
+    <textarea rows = "5" cols = "50" name = "contenu">
+    </textarea>
+  
+    <br>
+    {{#if message }}
+    <div class="error-message">{{ message }}</div>
+    {{/if}}
+
+  	<button>Envoyer</button>
+
+</form>
