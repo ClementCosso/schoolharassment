@@ -5,7 +5,6 @@ module.exports = [
     ville: "qui",
     cp: "33000",
     departement: "Gironde",
-    email: "wintersstrong@conjurica.com",
     telephone: "+33 (963) 477-2795"
   },
   {
@@ -14,7 +13,14 @@ module.exports = [
     ville: "do",
     cp: "33000",
     departement: "Gironde",
-    email: "wintersstrong@conjurica.com",
     telephone: "+33 (819) 566-2530"
+  },
+  {
+    nom: "College Simone de Beauvoir",
+    adresse: "nostrud aute magna",
+    ville: "Marseille",
+    cp: "13001",
+    departement: "Bouches-du-Rhône",
+    telephone: "+33 (963) 477-2795"
   }
 ];
