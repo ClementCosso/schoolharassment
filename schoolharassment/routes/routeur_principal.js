@@ -1,60 +1,60 @@
 /*
-******************************************************************************************************************************
-*                                                                       
-*                                           T A B L E    D E S   M A T I E R E S
-*
-******************************************************************************************************************************
-*
-*
-*   I   - CONFIGURATION     (settings, models, middlewares)
-*
-*   II  - PAGE ACCEUIL      (lancement de l'application)
-*
-*   III - PAGE MODE EMPLOI  (mode emploi de l'application - à definir)
-*
-*   IV  - ROUTES PRINCIPAL  (définition des routes et methods)
-*         
-*         1/ INDEX
-*
-*               a) METHOD GET PAGE INDEX
-*
-*         2/ PROFILE
-*
-*               a) METHOD GET PAGE PROFILE
-*               b) METHOD GET PAGE UPDATE PROFILE
-*               c) METHOD POST UPDATE PROFILE
-*
-*         3/ UTILISATEURS
-* 
-*               a) METHOD GET PAGE LISTE UTILISATEUR
-*               b) METHOD GET PAGE UPDATE UTILISATEUR
-*               c) METHOD POST UPDATE UTILISATEUR
-*               d) METHOD POST DELETE UTILISATEUR
-*               e) METHOD GET PAGE CREATION UTILISATEUR
-*               f) METHOD POST CREATION UTILISATEUR
-*
-*         4/ ETABLISSEMENTS
-*
-*               a) METHOD GET PAGE LISTE ETABLISSEMENT
-*               b) METHOD GET PAGE UPDATE ETABLISSEMENT
-*               c) METHOD POST PAGE UPDATE ETABLISSEMENT
-*               d) METHOD POST DELETE ETABLISSEMENT
-*               e) METHOD GET PAGE CREATION ETABLISSEMENT
-*               f) METHOD POST CREATION ETABLISSEMENT
-*         
-*         5/ MESSAGERIE
-*
-*               a) METHOD GET PAGE MESSAGERIE
-*               b) METHOD GET PAGE NOUVEAU MESSAGE
-*               c) METHOD POST NOUVEAU MESSAGE
-*               d) METHOD POST MESSAGE LU
-*               e) METHOD POST SUPPRESSION MESSAGE
-*               f) METHOD GET REPONSE MESSAGE
-*               g) METHOD POST REPONSE MESSAGE
-*
-*
-******************************************************************************************************************************
-*/
+ ******************************************************************************************************************************
+ *
+ *                                           T A B L E    D E S   M A T I E R E S
+ *
+ ******************************************************************************************************************************
+ *
+ *
+ *   I   - CONFIGURATION     (settings, models, middlewares)
+ *
+ *   II  - PAGE ACCEUIL      (lancement de l'application)
+ *
+ *   III - PAGE MODE EMPLOI  (mode emploi de l'application - à definir)
+ *
+ *   IV  - ROUTES PRINCIPAL  (définition des routes et methods)
+ *
+ *         1/ INDEX
+ *
+ *               a) METHOD GET PAGE INDEX
+ *
+ *         2/ PROFILE
+ *
+ *               a) METHOD GET PAGE PROFILE
+ *               b) METHOD GET PAGE UPDATE PROFILE
+ *               c) METHOD POST UPDATE PROFILE
+ *
+ *         3/ UTILISATEURS
+ *
+ *               a) METHOD GET PAGE LISTE UTILISATEUR
+ *               b) METHOD GET PAGE UPDATE UTILISATEUR
+ *               c) METHOD POST UPDATE UTILISATEUR
+ *               d) METHOD POST DELETE UTILISATEUR
+ *               e) METHOD GET PAGE CREATION UTILISATEUR
+ *               f) METHOD POST CREATION UTILISATEUR
+ *
+ *         4/ ETABLISSEMENTS
+ *
+ *               a) METHOD GET PAGE LISTE ETABLISSEMENT
+ *               b) METHOD GET PAGE UPDATE ETABLISSEMENT
+ *               c) METHOD POST PAGE UPDATE ETABLISSEMENT
+ *               d) METHOD POST DELETE ETABLISSEMENT
+ *               e) METHOD GET PAGE CREATION ETABLISSEMENT
+ *               f) METHOD POST CREATION ETABLISSEMENT
+ *
+ *         5/ MESSAGERIE
+ *
+ *               a) METHOD GET PAGE MESSAGERIE
+ *               b) METHOD GET PAGE NOUVEAU MESSAGE
+ *               c) METHOD POST NOUVEAU MESSAGE
+ *               d) METHOD POST MESSAGE LU
+ *               e) METHOD POST SUPPRESSION MESSAGE
+ *               f) METHOD GET REPONSE MESSAGE
+ *               g) METHOD POST REPONSE MESSAGE
+ *
+ *
+ ******************************************************************************************************************************
+ */
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -62,21 +62,20 @@
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-
-const express   = require('express');
-const router  = express.Router();
+const express = require("express");
+const router = express.Router();
 const ensureLogin = require("connect-ensure-login");
 const flash = require("connect-flash");
-var helpers = require('handlebars-helpers')();
+var helpers = require("handlebars-helpers")();
 
 // MODELS
-const Etablissement = require('../models/Etablissement');
+const Etablissement = require("../models/Etablissement");
 const User = require("../models/User");
 const Message = require("../models/Message");
 
 // Bcrypt to encrypt passwords
-const bcrypt      = require("bcrypt");
-const bcryptSalt  = 10;
+const bcrypt = require("bcrypt");
+const bcryptSalt = 10;
 
 // FONCTION ROLES
 function checkRoles(role) {
@@ -84,14 +83,13 @@ function checkRoles(role) {
     if (req.isAuthenticated() && req.user.role === role) {
       return next();
     } else {
-      res.redirect('/login')
+      res.redirect("/login");
     }
-  }
+  };
 }
 
-// DEFINITION DES ROLES     
-const checkPrincipal 	= checkRoles("PRINCIPAL.E");
-
+// DEFINITION DES ROLES
+const checkPrincipal = checkRoles("PRINCIPAL.E");
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -99,19 +97,17 @@ const checkPrincipal 	= checkRoles("PRINCIPAL.E");
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-
 // METHOD GET PAGE ACCEUIL
 /*
   Au chargement de l'application, si l'utilisateur n'est pas identifié on lui renvoit la page de connexion
 */
-router.get('/', (req, res, next) => {
+router.get("/", (req, res, next) => {
   if (req.isAuthenticated()) {
-      res.render('index');
-    } else {
-      res.redirect('/auth/login');
-    }
+    res.render("index");
+  } else {
+    res.redirect("/auth/login");
+  }
 });
-
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -119,12 +115,10 @@ router.get('/', (req, res, next) => {
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-
 // METHOD GET PAGE MODE EMPLOI
 router.get("/mode_emploi", ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  res.render("mode_emploi", {layout:false});
+  res.render("mode_emploi", { layout: false });
 });
-
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -132,250 +126,364 @@ router.get("/mode_emploi", ensureLogin.ensureLoggedIn(), (req, res, next) => {
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                      1/ I N D E X                                                        //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 // a) METHOD GET PAGE INDEX
 
-router.get("/principal/index_principal", ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  res.render("principal/index_principal", {layout: 'layout_principal.hbs', user: req.user});
-});
-
+router.get(
+  "/principal/index_principal",
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    res.render("principal/index_principal", {
+      layout: "layout_principal.hbs",
+      user: req.user
+    });
+  }
+);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                    2/ P R O F I L E                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 // a) METHOD GET PAGE PROFILE
-router.get('/principal/:id/profile_principal', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  User.findOne({_id: req.params.id}) 
-  .then(user => {
-    Etablissement.find({_id : {$eq: user.etablissement}})
-    .then(etablissements => {
-      res.render('principal/profile_principal', {layout: 'layout_principal.hbs', user: user, etablissements:etablissements});
-    })
-  })
-});
+router.get(
+  "/principal/:id/profile_principal",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    User.findOne({ _id: req.params.id }).then(user => {
+      Etablissement.find({ _id: { $eq: user.etablissement } }).then(
+        etablissements => {
+          res.render("principal/profile_principal", {
+            layout: "layout_principal.hbs",
+            user: user,
+            etablissements: etablissements
+          });
+        }
+      );
+    });
+  }
+);
 
 // b) METHOD GET PAGE UPDATE PROFILE
-router.get('/principal/:id/edit', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  User.findOne({_id: req.params.id}) 
-  .then(user => {
-      res.render('principal/edit',{layout: 'layout_principal.hbs', user: user});
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-});
+router.get(
+  "/principal/:id/edit",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    User.findOne({ _id: req.params.id })
+      .then(user => {
+        res.render("principal/edit", {
+          layout: "layout_principal.hbs",
+          user: user
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+);
 
 // c) METHOD POST UPDATE PROFILE
-router.post('/principal/edit', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+router.post(
+  "/principal/edit",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    const { telephone, username, password } = req.body;
 
-  const { telephone, username, password } = req.body;
+    const salt = bcrypt.genSaltSync(bcryptSalt);
+    const hashPass = bcrypt.hashSync(password, salt);
 
-  const salt = bcrypt.genSaltSync(bcryptSalt);
-  const hashPass = bcrypt.hashSync(password, salt);
-
-  User.update({_id: req.query.user_id}, {$set: {telephone, username, password:hashPass}})
-  .then((user) => {
-    res.redirect('/principal/'+req.query.user_id+'/profile_principal');
-  })
-});
-
+    User.update(
+      { _id: req.query.user_id },
+      { $set: { telephone, username, password: hashPass } }
+    ).then(user => {
+      res.redirect("/principal/" + req.query.user_id + "/profile_principal");
+    });
+  }
+);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             3/ U T I L I S A T E U R S                                                   //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 // a) METHOD GET PAGE LISTE UTILISATEUR
-router.get('/principal/liste_utilisateur', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  User.find()
-    .then(users => {
-      res.render('principal/liste_utilisateur', {layout: 'layout_principal.hbs', users: users});
-    })
-    .catch(error => {
-      console.log('Error while getting the users from the DB: ', error);
-    })
+router.get(
+  "/principal/:id/liste_utilisateur",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    User.findOne({ _id: req.params.id })
+      .then(user => {
+        User.find().then(users => {
+          res.render("principal/liste_utilisateur", {
+            layout: "layout_principal.hbs",
+            users: users,
+            user: user
+          });
+        });
+      })
+      .catch(error => {
+        console.log("Error while getting the users from the DB: ", error);
+      });
+  }
+);
+
+router.post("/principal/:id/liste_utilisateur", (req, res, next) => {
+  User.find({
+    username: { $regex: "^" + req.body.search }
+  }).then(users => {
+    res.send({ liste: users });
+  });
 });
 
+module.exports = router;
+
 // b) METHOD GET PAGE UPDATE UTILISATEUR
-router.get('/principal/:id/update_user', (req, res, next) => {
-  User.findOne({_id: req.params.id}) 
-  .then(user => {
-      res.render('principal/update_user', {layout: 'layout_principal.hbs', user: user});
+router.get("/principal/:id/update_user", (req, res, next) => {
+  User.findOne({ _id: req.params.id })
+    .then(user => {
+      res.render("principal/update_user", {
+        layout: "layout_principal.hbs",
+        user: user
+      });
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(error);
-    })
+    });
 });
 
 // c) METHOD POST UPDATE UTILISATEUR
-router.post('/principal/update_user', (req, res, next) => {
-  const { nom, prenom, username, telephone, role, genre, classe, parent_nom, parent_prenom, parent_email, parent_telephone, password } = req.body;
+router.post("/principal/update_user", (req, res, next) => {
+  const {
+    nom,
+    prenom,
+    username,
+    telephone,
+    role,
+    genre,
+    classe,
+    parent_nom,
+    parent_prenom,
+    parent_email,
+    parent_telephone,
+    password
+  } = req.body;
 
   const salt = bcrypt.genSaltSync(bcryptSalt);
   const hashPass = bcrypt.hashSync(password, salt);
 
-  User.update({_id: req.query.user_id}, {$set: {nom, prenom, username, telephone, role, genre, classe, parent_nom, parent_prenom, parent_email, parent_telephone, password:hashPass}})
-  .then((user) => {
-    res.redirect('/principal/liste_utilisateur');
-  })
+  User.update(
+    { _id: req.query.user_id },
+    {
+      $set: {
+        nom,
+        prenom,
+        username,
+        telephone,
+        role,
+        genre,
+        classe,
+        parent_nom,
+        parent_prenom,
+        parent_email,
+        parent_telephone,
+        password: hashPass
+      }
+    }
+  ).then(user => {
+    res.redirect("/principal/liste_utilisateur");
+  });
 });
 
 // d) METHOD POST DELETE UTILISATEUR
-router.post('/principal/:id/delete_user', function(req, res){
-  User.findByIdAndRemove({_id: req.params.id}) 
-  .then((user) => {
-    res.redirect('/principal/liste_utilisateur');
-  })
-  .catch((error) => {
-    console.log(error);
-  })
+router.post("/principal/:id/delete_user", function(req, res) {
+  User.findByIdAndRemove({ _id: req.params.id })
+    .then(user => {
+      res.redirect("/principal/liste_utilisateur");
+    })
+    .catch(error => {
+      console.log(error);
+    });
 });
 
 // e) METHOD GET PAGE CREATION UTILISATEUR
-router.get("/principal/signup", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  Etablissement.find()
-  .then(etablissements => {
-    res.render('principal/signup', {layout: 'layout_principal.hbs', etablissements});
-  })
-});
+router.get(
+  "/principal/signup",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    Etablissement.find().then(etablissements => {
+      res.render("principal/signup", {
+        layout: "layout_principal.hbs",
+        etablissements
+      });
+    });
+  }
+);
 
 // f) METHOD POST CREATION UTILISATEUR
-router.post("/principal/signup", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+router.post(
+  "/principal/signup",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    const nom = req.body.nom;
+    const prenom = req.body.prenom;
+    const classe = req.body.classe;
+    const username = req.body.username;
+    const telephone = req.body.telephone;
+    const role = req.body.role;
+    const genre = req.body.genre;
+    const etablissement = req.body.etablissement;
+    const parent_nom = req.body.parent_nom;
+    const parent_prenom = req.body.parent_prenom;
+    const parent_email = req.body.parent_email;
+    const parent_telephone = req.body.parent_telephone;
+    const password = req.body.password;
 
-  const nom               = req.body.nom;
-  const prenom            = req.body.prenom;
-  const classe            = req.body.classe;
-  const username          = req.body.username;
-  const telephone         = req.body.telephone;
-  const role              = req.body.role;
-  const genre             = req.body.genre;
-  const etablissement     = req.body.etablissement;
-  const parent_nom        = req.body.parent_nom;
-  const parent_prenom     = req.body.parent_prenom;
-  const parent_email      = req.body.parent_email;
-  const parent_telephone  = req.body.parent_telephone;
-  const password          = req.body.password;
-
-
-  if (username === "" || password === "") {
-    res.render("principal/signup", { message: "Indicate username and password" });
-    return;
-  }
-
-  User.findOne({ username }, "username", (err, user) => {
-    if (user !== null) {
-      res.render("principal/signup", { message: "The username already exists" });
+    if (username === "" || password === "") {
+      res.render("principal/signup", {
+        message: "Indicate username and password"
+      });
       return;
     }
 
-    const salt = bcrypt.genSaltSync(bcryptSalt);
-    const hashPass = bcrypt.hashSync(password, salt);
+    User.findOne({ username }, "username", (err, user) => {
+      if (user !== null) {
+        res.render("principal/signup", {
+          message: "The username already exists"
+        });
+        return;
+      }
 
-    const newUser = new User({
-      nom,
-      prenom,
-      classe,
-      username,
-      telephone,
-      role,
-      genre,
-      etablissement,
-      parent_nom,
-      parent_prenom,
-      parent_email,
-      parent_telephone,
-      password: hashPass
+      const salt = bcrypt.genSaltSync(bcryptSalt);
+      const hashPass = bcrypt.hashSync(password, salt);
+
+      const newUser = new User({
+        nom,
+        prenom,
+        classe,
+        username,
+        telephone,
+        role,
+        genre,
+        etablissement,
+        parent_nom,
+        parent_prenom,
+        parent_email,
+        parent_telephone,
+        password: hashPass
+      });
+
+      newUser
+        .save()
+        .then(() => {
+          res.redirect("/principal/index_principal");
+        })
+        .catch(err => {
+          res.render("principal/signup", { message: "Something went wrong" });
+        });
     });
-
-    newUser.save()
-    .then(() => {
-      res.redirect("/principal/index_principal");
-    })
-    .catch(err => {
-      res.render("principal/signup", { message: "Something went wrong" });
-    })
-  });
-
-  
-});
-
+  }
+);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           4/ E T A B L I S S E M E N T S                                                 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 // a) METHOD GET PAGE LISTE ETABLISSEMENT
-router.get('/principal/liste_etablissement', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  Etablissement.find()
-    .then(etablissements => {
-      res.render('principal/liste_etablissement', {layout: 'layout_principal.hbs', etablissements: etablissements});
-    })
-    .catch(error => {
-      console.log('Error while getting the etablissements from the DB: ', error);
-    })
-});
+router.get(
+  "/principal/liste_etablissement",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    Etablissement.find()
+      .then(etablissements => {
+        res.render("principal/liste_etablissement", {
+          layout: "layout_principal.hbs",
+          etablissements: etablissements
+        });
+      })
+      .catch(error => {
+        console.log(
+          "Error while getting the etablissements from the DB: ",
+          error
+        );
+      });
+  }
+);
 
 // b) METHOD GET PAGE UPDATE ETABLISSEMENT
-router.get('/principal/:id/update_etablissement', (req, res, next) => {
-  Etablissement.findOne({_id: req.params.id}) 
-  .then(etablissement => {
-      res.render('principal/update_etablissement', {layout: 'layout_principal.hbs', etablissement: etablissement});
+router.get("/principal/:id/update_etablissement", (req, res, next) => {
+  Etablissement.findOne({ _id: req.params.id })
+    .then(etablissement => {
+      res.render("principal/update_etablissement", {
+        layout: "layout_principal.hbs",
+        etablissement: etablissement
+      });
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(error);
-    })
+    });
 });
 
 // c) METHOD POST PAGE UPDATE ETABLISSEMENT
-router.post('/principal/:id/update_etablissement', (req, res, next) => {
-  Etablissement.updateOne({_id: req.params.id}, {$set: req.body})
-  .then(etablissement => {
-    res.redirect('/principal/liste_etablissement');
-  })
+router.post("/principal/:id/update_etablissement", (req, res, next) => {
+  Etablissement.updateOne({ _id: req.params.id }, { $set: req.body }).then(
+    etablissement => {
+      res.redirect("/principal/liste_etablissement");
+    }
+  );
 });
 
 // d) METHOD POST DELETE ETABLISSEMENT
-router.post('/principal/:id/delete', function(req, res){
-  Etablissement.findByIdAndRemove({_id: req.params.id}) 
-  .then((etablissement) => {
-    res.redirect('/principal/liste_etablissement');
-  })
-  .catch((error) => {
-    console.log(error);
-  })
+router.post("/principal/:id/delete", function(req, res) {
+  Etablissement.findByIdAndRemove({ _id: req.params.id })
+    .then(etablissement => {
+      res.redirect("/principal/liste_etablissement");
+    })
+    .catch(error => {
+      console.log(error);
+    });
 });
 
 // e) METHOD GET PAGE CREATION ETABLISSEMENT
-router.get("/principal/creation_etablissement", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-    res.render('principal/creation_etablissement', {layout: 'layout_principal.hbs'});
-});
+router.get(
+  "/principal/creation_etablissement",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    res.render("principal/creation_etablissement", {
+      layout: "layout_principal.hbs"
+    });
+  }
+);
 
 // f) METHOD POST CREATION ETABLISSEMENT
-router.post('/principal/creation_etablissement', (req, res, next) => {
-
-  const nom         = req.body.nom;
-  const adresse     = req.body.adresse;
-  const ville       = req.body.ville;
-  const cp          = req.body.cp;
+router.post("/principal/creation_etablissement", (req, res, next) => {
+  const nom = req.body.nom;
+  const adresse = req.body.adresse;
+  const ville = req.body.ville;
+  const cp = req.body.cp;
   const departement = req.body.departement;
-  const telephone   = req.body.telephone;
+  const telephone = req.body.telephone;
 
   if (nom === "" || adresse === "") {
-    res.render("principal/creation_etablissement", { message: "Veuillez remplir tous les champs" });
+    res.render("principal/creation_etablissement", {
+      message: "Veuillez remplir tous les champs"
+    });
     return;
   }
 
   Etablissement.findOne({ nom }, "nom", (err, etablissement) => {
     if (etablissement !== null) {
-      res.render("principal/creation_etablissement", { message: "The etablissement already exists" });
+      res.render("principal/creation_etablissement", {
+        message: "The etablissement already exists"
+      });
       return;
     }
 
@@ -388,176 +496,233 @@ router.post('/principal/creation_etablissement', (req, res, next) => {
       telephone
     });
 
-    newEtablissement.save()
-    .then(() => {
-      res.redirect("/principal/index_principal");
-    })
-    .catch(err => {
-      res.render("principal/creation_etablissement", { message: "Something went wrong" });
-    })
+    newEtablissement
+      .save()
+      .then(() => {
+        res.redirect("/principal/index_principal");
+      })
+      .catch(err => {
+        res.render("principal/creation_etablissement", {
+          message: "Something went wrong"
+        });
+      });
   });
-
 });
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                5/ M E S S A G E R I E                                                    //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 // a) METHOD GET PAGE MESSAGERIE
-router.get("/principal/:id/messagerie_principal", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  User.findOne({_id: req.params.id}) 
-  .then(user => {
-    Message.find({emetteur: { $eq: user._id }})
-    .then(message_emis => {
-      User.find()
-      .then(users => {
-        Message.find({$and: [ {lu: { $eq: 'OUI' }} , {recepteur: { $eq: user._id }} ] })
-        .then(message_lu => {
-          Message.find({$and: [ {lu: { $eq: 'NON' }} , {recepteur: { $eq: user._id }} ] })
-          .then(message_non_lu => {
-            res.render('principal/messagerie_principal', {layout: 'layout_principal.hbs', user: user, message_emis: message_emis, users: users, message_lu: message_lu, message_non_lu: message_non_lu});
-         })
-        })
-      })
-    })
-  })
-});
+router.get(
+  "/principal/:id/messagerie_principal",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    User.findOne({ _id: req.params.id }).then(user => {
+      Message.find({ emetteur: { $eq: user._id } }).then(message_emis => {
+        User.find().then(users => {
+          Message.find({
+            $and: [{ lu: { $eq: "OUI" } }, { recepteur: { $eq: user._id } }]
+          }).then(message_lu => {
+            Message.find({
+              $and: [{ lu: { $eq: "NON" } }, { recepteur: { $eq: user._id } }]
+            }).then(message_non_lu => {
+              res.render("principal/messagerie_principal", {
+                layout: "layout_principal.hbs",
+                user: user,
+                message_emis: message_emis,
+                users: users,
+                message_lu: message_lu,
+                message_non_lu: message_non_lu
+              });
+            });
+          });
+        });
+      });
+    });
+  }
+);
 
 // b) METHOD GET NOUVEAU MESSAGE
-router.get("/principal/:id/creation_message", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  User.find()
-    .then(users => {
-      res.render('principal/creation_message', {layout: 'layout_principal.hbs', users: users, user: req.user});
-    })
-    .catch(error => {
-      console.log('Error while getting the users from the DB: ', error);
-    })
-});
+router.get(
+  "/principal/:id/creation_message",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    User.find()
+      .then(users => {
+        res.render("principal/creation_message", {
+          layout: "layout_principal.hbs",
+          users: users,
+          user: req.user
+        });
+      })
+      .catch(error => {
+        console.log("Error while getting the users from the DB: ", error);
+      });
+  }
+);
 
 // c) METHOD POST NOUVEAU MESSAGE
-router.post('/principal/creation_message', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+router.post(
+  "/principal/creation_message",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    const emetteur = req.body.emetteur;
+    const recepteur = req.body.recepteur;
+    const sujet = req.body.sujet;
+    const contenu = req.body.contenu;
+    const statut = req.body.statut;
+    const lu = req.body.lu;
 
-  const emetteur  = req.body.emetteur;
-  const recepteur = req.body.recepteur;
-  const sujet     = req.body.sujet;
-  const contenu   = req.body.contenu;
-  const statut    = req.body.statut;
-  const lu        = req.body.lu;
-
-  if (sujet === "" || contenu === "") {
-    res.render("principal/creation_message", { message: "Veuillez remplir tous les champs" });
-    return;
-  }
-
-  Message.findOne({ contenu }, "contenu", (err, message) => {
-    if (message !== null) {
-      res.render("principal/creation_message", { message: "The message already exists" });
+    if (sujet === "" || contenu === "") {
+      res.render("principal/creation_message", {
+        message: "Veuillez remplir tous les champs"
+      });
       return;
     }
 
-    const newMessage = new Message({
-      emetteur,
-      recepteur,
-      sujet,
-      contenu,
-      statut,
-      lu
+    Message.findOne({ contenu }, "contenu", (err, message) => {
+      if (message !== null) {
+        res.render("principal/creation_message", {
+          message: "The message already exists"
+        });
+        return;
+      }
+
+      const newMessage = new Message({
+        emetteur,
+        recepteur,
+        sujet,
+        contenu,
+        statut,
+        lu
+      });
+
+      newMessage
+        .save()
+        .then(() => {
+          res.redirect("/principal/" + emetteur + "/messagerie_principal");
+        })
+        .catch(err => {
+          res.render("principal/creation_message", {
+            message: "Something went wrong"
+          });
+        });
     });
-
-    newMessage.save()
-    .then(() => {
-      res.redirect("/principal/"+emetteur+"/messagerie_principal");
-    })
-    .catch(err => {
-      res.render("principal/creation_message", { message: "Something went wrong" });
-    })
-  });
-
-});
+  }
+);
 
 // d) METHOD POST MESSAGE LU
-router.post('/principal/:id/message_lu', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  const lu = req.body.lu;
-  Message.findOneAndUpdate( {_id: req.params.id}, {$set: {lu : 'OUI'} } )
-  .then((user) => {
-    res.redirect('back');
-  })
-
-});
+router.post(
+  "/principal/:id/message_lu",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    const lu = req.body.lu;
+    Message.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: { lu: "OUI" } }
+    ).then(user => {
+      res.redirect("back");
+    });
+  }
+);
 
 // e) METHOD SUPPRESSION MESSAGE
-router.post('/principal/:id/delete_message', checkPrincipal, ensureLogin.ensureLoggedIn(), function(req, res){
-  Message.findByIdAndRemove({_id: req.params.id}) 
-  .then((message) => {
-    res.redirect('back');
-  })
-  .catch((error) => {
-    console.log(error);
-  })
-});
+router.post(
+  "/principal/:id/delete_message",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  function(req, res) {
+    Message.findByIdAndRemove({ _id: req.params.id })
+      .then(message => {
+        res.redirect("back");
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+);
 
 // f) METHOD GET REPONSE MESSAGE
-router.get('/principal/:id/reponse_message', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  const lu = req.body.lu;
-  Message.findOneAndUpdate( {_id: req.params.id}, {$set: {lu : 'OUI'} } )
-  .then((message) =>
-    Message.findOne({_id: req.params.id}) 
-    .then(reponse_message => {
-      res.render('principal/reponse_message', {layout: 'layout_principal.hbs', reponse_message: reponse_message, message: message});
-    })
-  )
-  .catch((error) => {
-    console.log(error);
-  })
-});
+router.get(
+  "/principal/:id/reponse_message",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    const lu = req.body.lu;
+    Message.findOneAndUpdate({ _id: req.params.id }, { $set: { lu: "OUI" } })
+      .then(message =>
+        Message.findOne({ _id: req.params.id }).then(reponse_message => {
+          res.render("principal/reponse_message", {
+            layout: "layout_principal.hbs",
+            reponse_message: reponse_message,
+            message: message
+          });
+        })
+      )
+      .catch(error => {
+        console.log(error);
+      });
+  }
+);
 
 // g) METHOD POST REPONSE MESSAGE
-router.post('/principal/reponse_message', checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+router.post(
+  "/principal/reponse_message",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    const emetteur = req.body.emetteur;
+    const recepteur = req.body.recepteur;
+    const sujet = req.body.sujet;
+    const contenu = req.body.contenu;
+    const statut = req.body.statut;
+    const lu = req.body.lu;
 
-  const emetteur  = req.body.emetteur;
-  const recepteur = req.body.recepteur;
-  const sujet     = req.body.sujet;
-  const contenu   = req.body.contenu;
-  const statut    = req.body.statut;
-  const lu        = req.body.lu;
-
-  if (sujet === "" || contenu === "") {
-    res.render("principal/reponse_message", { message: "Veuillez remplir tous les champs" });
-    return;
-  }
-
-  Message.findOne({ contenu }, "contenu", (err, message) => {
-    if (message !== null) {
-      res.render("principal/reponse_message", { message: "The message already exists" });
+    if (sujet === "" || contenu === "") {
+      res.render("principal/reponse_message", {
+        message: "Veuillez remplir tous les champs"
+      });
       return;
     }
 
-    const newMessage = new Message({
-      emetteur,
-      recepteur,
-      sujet,
-      contenu,
-      statut,
-      lu
+    Message.findOne({ contenu }, "contenu", (err, message) => {
+      if (message !== null) {
+        res.render("principal/reponse_message", {
+          message: "The message already exists"
+        });
+        return;
+      }
+
+      const newMessage = new Message({
+        emetteur,
+        recepteur,
+        sujet,
+        contenu,
+        statut,
+        lu
+      });
+
+      newMessage
+        .save()
+        .then(() => {
+          res.redirect("/principal/" + emetteur + "/messagerie_principal");
+        })
+        .catch(err => {
+          res.render("principal/reponse_message", {
+            message: "Something went wrong"
+          });
+        });
     });
-
-    newMessage.save()
-    .then(() => {
-      res.redirect("/principal/"+emetteur+"/messagerie_principal");
-    })
-    .catch(err => {
-      res.render("principal/reponse_message", { message: "Something went wrong" });
-    })
-  });
-
-});
-
+  }
+);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 module.exports = router;
