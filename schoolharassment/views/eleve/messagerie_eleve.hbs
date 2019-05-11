@@ -45,9 +45,9 @@
 
 <br>
 
+{{#if message_non_lu}}
 <div id="messages_non_lu">
 
-{{#if message_non_lu}}
 <table style="border: lavender 3px solid;">
   <tr>
     <th colspan="5">Messages non lus</th>
@@ -61,14 +61,16 @@
   </tr>
   {{#each message_non_lu}}
   <tr>
-  	<td>{{emetteur}}</td>
-  	<td>{{created_at}}</td>
-  	<td>{{sujet}}</td>
-  	<td>{{contenu}}</td>
-  	<td>
-      <a class="button primary small" href="/eleve/{{this._id}}/reponse_message">Répondre</a>
+    {{#each emetteur}}
+    <td>{{username}} - {{nom}} {{prenom}}</td>
+    {{/each}}
+    <td>{{created_at}}</td>
+    <td>{{sujet}}</td>
+    <td>{{contenu}}</td>
+    <td>
+      <a class="button primary small" href="/principal/{{this._id}}/reponse_message">Répondre</a>
       <br><br>
-      <form action="/eleve/{{this._id}}/message_lu" method="POST">
+      <form action="/principal/{{this._id}}/message_lu" method="POST">
         <button class="btn primary small" type="submit">Lu</button>
       </form>
     </td>
@@ -76,13 +78,13 @@
   {{/each}}
  </table>
  <hr>
- {{/if}}
 
 </div>
+{{/if}}
 
+{{#if message_lu}}
 <div id="messages_lu">
 
- {{#if message_lu}}
  <table>
   <tr>
     <th colspan="5">Mesages lus</th>
@@ -93,61 +95,64 @@
     <td class="entete">Sujet</td>
     <td class="entete">Contenu</td>
     <td class="entete">&nbsp;</td>
-  </tr>  	
+  </tr>   
   {{#each message_lu}}
-  	<tr>
-  	<td>{{this.emetteur}}</td>
-  	<td>{{this.created_at}}</td>
-  	<td>{{this.sujet}}</td>
-  	<td>{{this.contenu}}</td>
-  	<td>
-      <a class="button small" href="/eleve/{{this._id}}/reponse_message">Répondre</a>
+    <tr>
+    {{#each emetteur}}
+    <td>{{username}} - {{nom}} {{prenom}}</td>
+    {{/each}}
+    <td>{{created_at}}</td>
+    <td>{{sujet}}</td>
+    <td>{{contenu}}</td>
+    <td>
+      <a class="button small" href="/principal/{{this._id}}/reponse_message">Répondre</a>
       <br><br>
-      <form action="/eleve/{{this._id}}/delete_message" method="POST">
+      <form action="/principal/{{this._id}}/delete_message" method="POST">
         <button class="btn small" type="submit">Supprimer</button>
       </form>
     </td>
-  	</tr>
+    </tr>
   {{/each}}
 </table>
 <hr>
-{{/if}}
 
 </div>
-
-<div id="messages_envoyes">
+{{/if}}
 
 {{#if message_emis}}
+<div id="messages_envoyes">
+
 <table>
-	   <tr>
-    	<th colspan="5">Messages envoyés</th>
-  	</tr>
-  	<tr>
-	    <td class="entete">À</td>
-	    <td class="entete">Date</td>
-	    <td class="entete">Sujet</td>
-	    <td class="entete">Contenu</td>
-	    <td class="entete">&nbsp;</td>
-  	</tr>
-  	{{#each message_emis}}
-  	<tr>
-		<td>{{this.recepteur}}</td>
-  	<td>{{this.created_at}}</td>
-  	<td>{{this.sujet}}</td>
-  	<td>{{this.contenu}}</td>
-  	<td>
-        <form action="/eleve/{{this._id}}/delete_message" method="POST">
+     <tr>
+      <th colspan="5">Messages envoyés</th>
+    </tr>
+    <tr>
+      <td class="entete">À</td>
+      <td class="entete">Date</td>
+      <td class="entete">Sujet</td>
+      <td class="entete">Contenu</td>
+      <td class="entete">&nbsp;</td>
+    </tr>
+    {{#each message_emis}}
+    <tr>
+    {{#each recepteur}}
+    <td>{{username}} - {{nom}} {{prenom}}</td>
+    {{/each}}
+    <td>{{created_at}}</td>
+    <td>{{sujet}}</td>
+    <td>{{contenu}}</td>
+    <td>
+        <form action="/principal/{{this._id}}/delete_message" method="POST">
           <button class="btn small" type="submit">Supprimer</button>
         </form>
     </td>
-	  </tr>
-	{{/each}}
+    </tr>
+  {{/each}}
 </table>
 <hr>
-{{/if}}
 
 </div>
-	
+{{/if}}
 
 <script>
 
