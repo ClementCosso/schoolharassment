@@ -68,9 +68,9 @@
     <td>{{sujet}}</td>
     <td>{{contenu}}</td>
     <td>
-      <a class="button primary small" href="/principal/{{this._id}}/reponse_message">Répondre</a>
+      <a class="button primary small" href="/eleve/{{this._id}}/reponse_message">Répondre</a>
       <br><br>
-      <form action="/principal/{{this._id}}/message_lu" method="POST">
+      <form action="/eleve/{{this._id}}/message_lu" method="POST">
         <button class="btn primary small" type="submit">Lu</button>
       </form>
     </td>
@@ -105,9 +105,9 @@
     <td>{{sujet}}</td>
     <td>{{contenu}}</td>
     <td>
-      <a class="button small" href="/principal/{{this._id}}/reponse_message">Répondre</a>
+      <a class="button small" href="/eleve/{{this._id}}/reponse_message">Répondre</a>
       <br><br>
-      <form action="/principal/{{this._id}}/delete_message" method="POST">
+      <form action="/eleve/{{this._id}}/delete_message" method="POST">
         <button class="btn small" type="submit">Supprimer</button>
       </form>
     </td>
@@ -142,7 +142,7 @@
     <td>{{sujet}}</td>
     <td>{{contenu}}</td>
     <td>
-        <form action="/principal/{{this._id}}/delete_message" method="POST">
+        <form action="/eleve/{{this._id}}/delete_message" method="POST">
           <button class="btn small" type="submit">Supprimer</button>
         </form>
     </td>
