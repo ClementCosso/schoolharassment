@@ -47,7 +47,6 @@
 
 <div id="messages_non_lu">
 
-{{#if message_non_lu}}
 <table style="border: lavender 3px solid;">
   <tr>
     <th colspan="5">Messages non lus</th>
@@ -76,13 +75,11 @@
   {{/each}}
  </table>
  <hr>
- {{/if}}
 
 </div>
 
 <div id="messages_lu">
 
- {{#if message_lu}}
  <table>
   <tr>
     <th colspan="5">Mesages lus</th>
@@ -96,10 +93,10 @@
   </tr>  	
   {{#each message_lu}}
   	<tr>
-  	<td>{{this.emetteur}}</td>
-  	<td>{{this.created_at}}</td>
-  	<td>{{this.sujet}}</td>
-  	<td>{{this.contenu}}</td>
+  	<td>{{emetteur}}</td>
+  	<td>{{created_at}}</td>
+  	<td>{{sujet}}</td>
+  	<td>{{contenu}}</td>
   	<td>
       <a class="button small" href="/principal/{{this._id}}/reponse_message">Répondre</a>
       <br><br>
@@ -111,13 +108,11 @@
   {{/each}}
 </table>
 <hr>
-{{/if}}
 
 </div>
 
 <div id="messages_envoyes">
 
-{{#if message_emis}}
 <table>
 	   <tr>
     	<th colspan="5">Messages envoyés</th>
@@ -131,10 +126,10 @@
   	</tr>
   	{{#each message_emis}}
   	<tr>
-		<td>{{this.recepteur}}</td>
-  	<td>{{this.created_at}}</td>
-  	<td>{{this.sujet}}</td>
-  	<td>{{this.contenu}}</td>
+		<td>{{recepteur}}</td>
+  	<td>{{created_at}}</td>
+  	<td>{{sujet}}</td>
+  	<td>{{contenu}}</td>
   	<td>
         <form action="/principal/{{this._id}}/delete_message" method="POST">
           <button class="btn small" type="submit">Supprimer</button>
@@ -144,7 +139,6 @@
 	{{/each}}
 </table>
 <hr>
-{{/if}}
 
 </div>
 	

@@ -410,15 +410,15 @@ router.get("/principal/:id/messagerie_principal", checkPrincipal, ensureLogin.en
   User.findOne({_id: req.params.id}) 
   .then(user => {
     Message.find({emetteur: { $eq: user._id }})
+    .populate('recepteur', 'nom prenom username')
     .then(message_emis => {
-      User.find()
-      .then(users => {
-        Message.find({$and: [ {lu: { $eq: 'OUI' }} , {recepteur: { $eq: user._id }} ] })
-        .then(message_lu => {
-          Message.find({$and: [ {lu: { $eq: 'NON' }} , {recepteur: { $eq: user._id }} ] })
-          .then(message_non_lu => {
-            res.render('principal/messagerie_principal', {layout: 'layout_principal.hbs', user: user, message_emis: message_emis, users: users, message_lu: message_lu, message_non_lu: message_non_lu});
-         })
+      Message.find({$and: [ {lu: { $eq: 'OUI' }} , {recepteur: { $eq: user._id }} ] })
+      .populate('emetteur', 'nom prenom username')
+      .then(message_lu => {
+        Message.find({$and: [ {lu: { $eq: 'NON' }} , {recepteur: { $eq: user._id }} ] })
+        .populate('emetteur', 'nom prenom username')
+         .then(message_non_lu => {
+           res.render('principal/messagerie_principal', {layout: 'layout_principal.hbs', user: user, message_emis: message_emis, message_lu: message_lu, message_non_lu: message_non_lu});
         })
       })
     })
