@@ -32,6 +32,7 @@
  *               d) METHOD POST DELETE UTILISATEUR
  *               e) METHOD GET PAGE CREATION UTILISATEUR
  *               f) METHOD POST CREATION UTILISATEUR
+ *               g) METHOD POST SEARCH BAR AXIOS
  *
  *         4/ ETABLISSEMENTS
  *
@@ -232,14 +233,6 @@ router.get(
   }
 );
 
-router.post("/principal/:id/liste_utilisateur", (req, res, next) => {
-  User.find({
-    username: { $regex: "^" + req.body.search }
-  }).then(users => {
-    res.send({ liste: users });
-  });
-});
-
 module.exports = router;
 
 // b) METHOD GET PAGE UPDATE UTILISATEUR
@@ -312,14 +305,17 @@ router.post("/principal/:id/delete_user", function(req, res) {
 
 // e) METHOD GET PAGE CREATION UTILISATEUR
 router.get(
-  "/principal/signup",
+  "/principal/:id/signup",
   checkPrincipal,
   ensureLogin.ensureLoggedIn(),
   (req, res, next) => {
-    Etablissement.find().then(etablissements => {
-      res.render("principal/signup", {
-        layout: "layout_principal.hbs",
-        etablissements
+    User.findOne({ _id: req.params.id }).then(user => {
+      Etablissement.find().then(etablissements => {
+        res.render("principal/signup", {
+          layout: "layout_principal.hbs",
+          user: user,
+          etablissements
+        });
       });
     });
   }
@@ -391,21 +387,34 @@ router.post(
   }
 );
 
+// METHOD POST SEARCH BAR AXIOS
+
+router.post("/principal/:id/liste_utilisateur", (req, res, next) => {
+  User.find({
+    username: { $regex: "^" + req.body.search }
+  }).then(users => {
+    res.send({ liste: users });
+  });
+});
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           4/ E T A B L I S S E M E N T S                                                 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // a) METHOD GET PAGE LISTE ETABLISSEMENT
 router.get(
-  "/principal/liste_etablissement",
+  "/principal/:id/liste_etablissement",
   checkPrincipal,
   ensureLogin.ensureLoggedIn(),
   (req, res, next) => {
-    Etablissement.find()
-      .then(etablissements => {
-        res.render("principal/liste_etablissement", {
-          layout: "layout_principal.hbs",
-          etablissements: etablissements
+    User.findOne({ _id: req.params.id })
+      .then(user => {
+        Etablissement.find().then(etablissements => {
+          res.render("principal/liste_etablissement", {
+            layout: "layout_principal.hbs",
+            etablissements: etablissements,
+            user: user
+          });
         });
       })
       .catch(error => {
@@ -514,56 +523,38 @@ router.post("/principal/creation_etablissement", (req, res, next) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // a) METHOD GET PAGE MESSAGERIE
-<<<<<<< HEAD
 router.get(
   "/principal/:id/messagerie_principal",
   checkPrincipal,
   ensureLogin.ensureLoggedIn(),
   (req, res, next) => {
     User.findOne({ _id: req.params.id }).then(user => {
-      Message.find({ emetteur: { $eq: user._id } }).then(message_emis => {
-        User.find().then(users => {
+      Message.find({ emetteur: { $eq: user._id } })
+        .populate("recepteur", "nom prenom username")
+        .then(message_emis => {
           Message.find({
             $and: [{ lu: { $eq: "OUI" } }, { recepteur: { $eq: user._id } }]
-          }).then(message_lu => {
-            Message.find({
-              $and: [{ lu: { $eq: "NON" } }, { recepteur: { $eq: user._id } }]
-            }).then(message_non_lu => {
-              res.render("principal/messagerie_principal", {
-                layout: "layout_principal.hbs",
-                user: user,
-                message_emis: message_emis,
-                users: users,
-                message_lu: message_lu,
-                message_non_lu: message_non_lu
-              });
+          })
+            .populate("emetteur", "nom prenom username")
+            .then(message_lu => {
+              Message.find({
+                $and: [{ lu: { $eq: "NON" } }, { recepteur: { $eq: user._id } }]
+              })
+                .populate("emetteur", "nom prenom username")
+                .then(message_non_lu => {
+                  res.render("principal/messagerie_principal", {
+                    layout: "layout_principal.hbs",
+                    user: user,
+                    message_emis: message_emis,
+                    message_lu: message_lu,
+                    message_non_lu: message_non_lu
+                  });
+                });
             });
-          });
         });
-      });
     });
   }
 );
-=======
-router.get("/principal/:id/messagerie_principal", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  User.findOne({_id: req.params.id}) 
-  .then(user => {
-    Message.find({emetteur: { $eq: user._id }})
-    .populate('recepteur', 'nom prenom username')
-    .then(message_emis => {
-      Message.find({$and: [ {lu: { $eq: 'OUI' }} , {recepteur: { $eq: user._id }} ] })
-      .populate('emetteur', 'nom prenom username')
-      .then(message_lu => {
-        Message.find({$and: [ {lu: { $eq: 'NON' }} , {recepteur: { $eq: user._id }} ] })
-        .populate('emetteur', 'nom prenom username')
-         .then(message_non_lu => {
-           res.render('principal/messagerie_principal', {layout: 'layout_principal.hbs', user: user, message_emis: message_emis, message_lu: message_lu, message_non_lu: message_non_lu});
-        })
-      })
-    })
-  })
-});
->>>>>>> 26702cc121e60fb1686625d967efbbed55158168
 
 // b) METHOD GET NOUVEAU MESSAGE
 router.get(
