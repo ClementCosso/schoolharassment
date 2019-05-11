@@ -462,12 +462,15 @@ router.post("/principal/:id/delete", function(req, res) {
 
 // e) METHOD GET PAGE CREATION ETABLISSEMENT
 router.get(
-  "/principal/creation_etablissement",
+  "/principal/:id/creation_etablissement",
   checkPrincipal,
   ensureLogin.ensureLoggedIn(),
   (req, res, next) => {
-    res.render("principal/creation_etablissement", {
-      layout: "layout_principal.hbs"
+    User.findOne({ _id: req.params.id }).then(user => {
+      res.render("principal/creation_etablissement", {
+        layout: "layout_principal.hbs",
+        user: user
+      });
     });
   }
 );
