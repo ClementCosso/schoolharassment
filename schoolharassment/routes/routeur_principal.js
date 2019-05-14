@@ -387,13 +387,25 @@ router.post(
   }
 );
 
-// METHOD POST SEARCH BAR AXIOS
+// g )METHOD POST SEARCH BAR AXIOS
 
 router.post("/principal/:id/liste_utilisateur", (req, res, next) => {
   User.find({
-    username: { $regex: "^" + req.body.search }
+    $or: [
+      {
+        nom: { $regex: "^(?i)" + req.body.search }
+      },
+      {
+        prenom: { $regex: "^(?i)" + req.body.search }
+      },
+      {
+        role: { $regex: "^(?i)" + req.body.search }
+      },
+      { username: { $regex: "^(?i)" + req.body.search } }
+    ]
   }).then(users => {
     res.send({ liste: users });
+    console.log(liste);
   });
 });
 

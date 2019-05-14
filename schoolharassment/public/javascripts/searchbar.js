@@ -46,21 +46,3 @@ document.addEventListener(
   },
   false
 );
-
-{
-  /* <h5>Statut : {{user.role}}</h5>
-        <p>
-          {{user.username}}<br>
-        {{user.telephone}}<br>
-        </p>
-  
-        <div style="display: flex;">
-          <h5 style="border: 2px solid white; padding: 10px; width: 133px; text-align: center; text-transform: uppercase; height:40px">
-            <a href="/principal/{{user._id}}/update_user">Modifier</a>
-          </h5>
-          &nbsp;
-          <form action="/principal/{{user._id}}/delete_user" method="POST">
-            <button type="submit">Supprimer</button>
-          </form>
-        </div></li>; */
-}
