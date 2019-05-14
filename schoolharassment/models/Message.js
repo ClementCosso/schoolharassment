@@ -8,7 +8,17 @@ const messageSchema = new Schema(
 	 	sujet		: { type: String, required: true },
 	  	contenu		: { type: String, required: true },
 	  	statut		: { type: String, required: true },
-	  	lu			: { type: String, required: true }
+	  	lu			: { type: String, required: true },
+	  	objet 		: { type: String,
+      				enum: [
+        				"HARCELEMENT PHYSIQUE",
+				        "HARCELEMENT VERBAL",
+				        "HARCELEMENT SOCIAL",
+				        "CYBERHARCELEMENT",
+				        "HARCELEMENT SEXUEL",
+				        "AUTRE TYPE DE HARCELEMENT"
+      				]
+    			}
 	},
 	{
 	  	timestamps	: { createdAt: 'created_at', updatedAt: 'updated_at' }

@@ -52,6 +52,7 @@
  *               e) METHOD POST SUPPRESSION MESSAGE
  *               f) METHOD GET REPONSE MESSAGE
  *               g) METHOD POST REPONSE MESSAGE
+ *               h) METHOD GET DETAIL MESSAGE
  *
  *
  ******************************************************************************************************************************
@@ -68,6 +69,7 @@ const router = express.Router();
 const ensureLogin = require("connect-ensure-login");
 const flash = require("connect-flash");
 var helpers = require("handlebars-helpers")();
+var moment = require('moment');
 
 // MODELS
 const Etablissement = require("../models/Etablissement");
@@ -526,38 +528,41 @@ router.post("/principal/creation_etablissement", (req, res, next) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // a) METHOD GET PAGE MESSAGERIE
-router.get(
-  "/principal/:id/messagerie_principal",
-  checkPrincipal,
-  ensureLogin.ensureLoggedIn(),
-  (req, res, next) => {
-    User.findOne({ _id: req.params.id }).then(user => {
-      Message.find({ emetteur: { $eq: user._id } })
-        .populate("recepteur", "nom prenom username")
-        .then(message_emis => {
-          Message.find({
-            $and: [{ lu: { $eq: "OUI" } }, { recepteur: { $eq: user._id } }]
-          })
+router.get("/principal/:id/messagerie_principal", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+  User.findOne({ _id: req.params.id }).then(user => {
+    Message.find({ $and: [ {emetteur: { $eq: user._id }}, {statut: { $eq: "PUBLIC"}} ] })
+    .populate("recepteur", "nom prenom username")
+    .then(message_emis_public => {
+      Message.find({ $and: [ {emetteur: { $eq: user._id }}, {statut: { $eq: "ANON"}} ] })
+      .then(message_emis_anon => {
+        Message.find({ $and: [ {lu: { $eq: "OUI" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "PUBLIC"}} ] })
+        .populate("emetteur", "nom prenom username")
+        .then(message_lu_public => {
+          Message.find({ $and: [ {lu: { $eq: "OUI" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "ANON"}} ] })
+          .then(message_lu_anon => {
+            Message.find({ $and: [ {lu: { $eq: "NON" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "PUBLIC"}} ] })
             .populate("emetteur", "nom prenom username")
-            .then(message_lu => {
-              Message.find({
-                $and: [{ lu: { $eq: "NON" } }, { recepteur: { $eq: user._id } }]
-              })
-                .populate("emetteur", "nom prenom username")
-                .then(message_non_lu => {
-                  res.render("principal/messagerie_principal", {
-                    layout: "layout_principal.hbs",
-                    user: user,
-                    message_emis: message_emis,
-                    message_lu: message_lu,
-                    message_non_lu: message_non_lu
-                  });
-                });
+            .then(message_non_lu_public => {
+              Message.find({ $and: [ {lu: { $eq: "NON" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "ANON"}} ] })
+              .then(message_non_lu_anon => {
+                res.render("principal/messagerie_principal", {
+                  layout: "layout_principal.hbs",
+                  user: user,
+                  message_emis_public: message_emis_public,
+                  message_emis_anon: message_emis_anon,
+                  message_lu_public: message_lu_public,
+                  message_lu_anon: message_lu_anon,
+                  message_non_lu_public: message_non_lu_public,
+                  message_non_lu_anon: message_non_lu_anon
+                });  
+              });
             });
+          });
         });
+      });
     });
-  }
-);
+  });
+});
 
 // b) METHOD GET NOUVEAU MESSAGE
 router.get(
@@ -591,6 +596,7 @@ router.post(
     const contenu = req.body.contenu;
     const statut = req.body.statut;
     const lu = req.body.lu;
+    const objet     = req.body.objet;
 
     if (sujet === "" || contenu === "") {
       res.render("principal/creation_message", {
@@ -613,7 +619,8 @@ router.post(
         sujet,
         contenu,
         statut,
-        lu
+        lu,
+        objet
       });
 
       newMessage
@@ -697,6 +704,7 @@ router.post(
     const contenu = req.body.contenu;
     const statut = req.body.statut;
     const lu = req.body.lu;
+    const objet = req.body.objet;
 
     if (sujet === "" || contenu === "") {
       res.render("principal/reponse_message", {
@@ -719,13 +727,14 @@ router.post(
         sujet,
         contenu,
         statut,
-        lu
+        lu,
+        objet
       });
 
       newMessage
         .save()
         .then(() => {
-          res.redirect("/principal/" + emetteur + "/messagerie_principal");
+          res.redirect("/principal/"+emetteur+"/messagerie_principal");
         })
         .catch(err => {
           res.render("principal/reponse_message", {
@@ -733,6 +742,26 @@ router.post(
           });
         });
     });
+  }
+);
+
+// h) METHOD GET DETAIL MESSAGE
+router.get(
+  "/principal/:id/detail_message",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+        Message.findOne({ _id: req.params.id })
+        .populate("recepteur", "nom prenom username")
+        .then(reponse_message => {
+          res.render("principal/detail_message", {
+            layout: "layout_principal.hbs",
+            reponse_message: reponse_message
+                      });
+        })
+      .catch(error => {
+        console.log(error);
+      });
   }
 );
 

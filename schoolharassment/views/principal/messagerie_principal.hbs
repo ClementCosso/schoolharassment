@@ -1,56 +1,68 @@
 <style>
-	.box{
-		display: flex;
-		justify-content: space-between;
-		flex-wrap: wrap;
-	}
-	#messages_non_lu{
-		display: block;
-	}
+  .box{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  #message_non_lu{
+    display: block;
+  }
 
-	#messages_lu{
-		display: block;
-	}
+  #message_lu{
+    display: block;
+    border: #708090 3px solid;
+  }
 
-	#messages_envoyes{
-		display: block;
-	}
+  #message_emis{
+    display: block;
+    border: #708090 3px solid;
+  }
 
-	table th{
-		background: slategrey;
-		color: #fff;
-		padding: 10px;
-		text-transform: uppercase;
-		letter-spacing: 5px;
-	}
+  table th{
+    background: slategrey;
+    color: #fff;
+    padding: 10px;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+  }
 
-	.entete{
-		text-transform: uppercase;
-	}
+  .entete{
+    text-transform: uppercase;
+  }
+
+  .anon{
+    font-style: italic;
+    background: #616e7d;
+  }
+
+  .lavend{
+    background: lavender;
+    color: #232943;
+  }
 
 </style>
 {{#if user}}
 
-	<h2>Messagerie de {{user.prenom}} {{user.nom}}</h2>
+  <h2>Messagerie de {{user.prenom}} {{user.nom}}</h2>
 
 {{/if}}
 <br>
 
 <div class="box">
-	<button id="tous" onclick="showAll()">Tous les messages</button>
-	<button id="recus" onclick="showReceived()">Messages reçus</button>
-	<button id="envoyes" onclick="showSend()">Messages envoyés</button>
-	<a href="/principal/{{user._id}}/creation_message" class="button primary">Nouveau Message</a>
+  <button id="tous" onclick="showAll()">Tous les messages</button>
+  <button id="recus" onclick="showReceived()">Messages reçus</button>
+  <button id="envoyes" onclick="showSend()">Messages envoyés</button>
+  <a href="/principal/{{user._id}}/creation_message" class="button primary">Nouveau Message</a>
 </div>
 
 <br>
 
-{{#if message_non_lu}}
-<div id="messages_non_lu">
+
+<div id="message_non_lu">
 
 <table style="border: lavender 3px solid;">
   <tr>
-    <th colspan="5">Messages non lus</th>
+    <th class="lavend" colspan="5">Messages non lus</th>
   </tr>
   <tr>
     <td class="entete">De</td>
@@ -59,35 +71,63 @@
     <td class="entete">Contenu</td>
     <td class="entete">&nbsp;</td>
   </tr>
-  {{#each message_non_lu}}
-  <tr>
-    {{#each emetteur}}
-  	<td>{{username}} - {{nom}} {{prenom}}</td>
-    {{/each}}
-  	<td>{{created_at}}</td>
-  	<td>{{sujet}}</td>
-  	<td>{{contenu}}</td>
-  	<td>
+
+  {{#if message_non_lu_public}}
+    {{#each message_non_lu_public}}
+    <tr>
+
+        {{#each emetteur}}
+          <td>{{username}} - {{nom}} {{prenom}}</td>
+        {{/each}}
+    
+    <td>{{created_at}}</td>
+    <td>{{sujet}}</td>
+    <td>{{contenu}}</td>
+    <td>
+      <a class="button primary small" href="/principal/{{this._id}}/detail_message">Voir</a>
+      <br><br>
       <a class="button primary small" href="/principal/{{this._id}}/reponse_message">Répondre</a>
       <br><br>
       <form action="/principal/{{this._id}}/message_lu" method="POST">
         <button class="btn primary small" type="submit">Lu</button>
       </form>
     </td>
-   </tr>
+  </tr>
+    {{/each}}
+    {{else}}
+    <tr><td colspan="5">Pas de nouveau message</td></tr>
+  {{/if}}
+  <tr><td class="lavend" colspan="5"><i>Messages Anonymes</i></td></tr>
+  {{#if message_non_lu_anon}}
+  {{#each message_non_lu_anon}}
+  <tr>
+    <td>Anonyme</td>
+    <td>{{created_at}}</td>
+    <td>{{sujet}}</td>
+    <td>{{contenu}}</td>
+    <td>
+      <a class="button primary small" href="/principal/{{this._id}}/detail_message">Voir</a>
+      <br><br>
+      <a class="button primary small" href="/principal/{{this._id}}/reponse_message">Répondre</a>
+      <br><br>
+      <form action="/principal/{{this._id}}/message_lu" method="POST">
+        <button class="btn primary small" type="submit">Lu</button>
+      </form>
+    </td>
+  </tr>
   {{/each}}
+  {{else}}
+    <tr><td colspan="5">Pas de nouveau message</td></tr>
+  {{/if}}
  </table>
- <hr>
-
 </div>
-{{/if}}
 
-{{#if message_lu}}
-<div id="messages_lu">
+<br>
 
+<div id="message_lu">
  <table>
   <tr>
-    <th colspan="5">Mesages lus</th>
+    <th colspan="5">Messages lus</th>
   </tr>
   <tr>
     <td class="entete">De</td>
@@ -95,115 +135,158 @@
     <td class="entete">Sujet</td>
     <td class="entete">Contenu</td>
     <td class="entete">&nbsp;</td>
-  </tr>  	
-  {{#each message_lu}}
-  	<tr>
-  	{{#each emetteur}}
+  </tr>
+  {{#if message_lu_public}}
+  {{#each message_lu_public}}
+    <tr>
+    {{#each emetteur}}
     <td>{{username}} - {{nom}} {{prenom}}</td>
     {{/each}}
-  	<td>{{created_at}}</td>
-  	<td>{{sujet}}</td>
-  	<td>{{contenu}}</td>
-  	<td>
+    <td>{{created_at}}</td>
+    <td>{{sujet}}</td>
+    <td>{{contenu}}</td>
+    <td>
+      <a class="button primary small" href="/principal/{{this._id}}/detail_message">Voir</a>
+      <br><br>
       <a class="button small" href="/principal/{{this._id}}/reponse_message">Répondre</a>
       <br><br>
       <form action="/principal/{{this._id}}/delete_message" method="POST">
         <button class="btn small" type="submit">Supprimer</button>
       </form>
     </td>
-  	</tr>
+    </tr>
   {{/each}}
-</table>
-<hr>
-
-</div>
-{{/if}}
-
-{{#if message_emis}}
-<div id="messages_envoyes">
-
-<table>
-	   <tr>
-    	<th colspan="5">Messages envoyés</th>
-  	</tr>
-  	<tr>
-	    <td class="entete">À</td>
-	    <td class="entete">Date</td>
-	    <td class="entete">Sujet</td>
-	    <td class="entete">Contenu</td>
-	    <td class="entete">&nbsp;</td>
-  	</tr>
-  	{{#each message_emis}}
-  	<tr>
-		{{#each recepteur}}
-    <td>{{username}} - {{nom}} {{prenom}}</td>
-    {{/each}}
-  	<td>{{created_at}}</td>
-  	<td>{{sujet}}</td>
-  	<td>{{contenu}}</td>
-  	<td>
-        <form action="/principal/{{this._id}}/delete_message" method="POST">
-          <button class="btn small" type="submit">Supprimer</button>
-        </form>
+  {{/if}}
+  <tr><td class="anon" colspan="5">Messages Anonymes</td></tr>
+  {{#if message_lu_anon}}
+  {{#each message_lu_anon}}
+    <tr>
+    <td>Anonyme</td>
+    <td>{{created_at}}</td>
+    <td>{{sujet}}</td>
+    <td>{{contenu}}</td>
+    <td>
+      <a class="button primary small" href="/principal/{{this._id}}/detail_message">Voir</a>
+      <br><br>
+      <a class="button small" href="/principal/{{this._id}}/reponse_message">Répondre</a>
+      <br><br>
+      <form action="/principal/{{this._id}}/delete_message" method="POST">
+        <button class="btn small" type="submit">Supprimer</button>
+      </form>
     </td>
-	  </tr>
-	{{/each}}
+    </tr>
+  {{/each}}
+  {{/if}}
 </table>
+</div>
+
 <hr>
 
+<div id="message_emis">
+<table>
+     <tr>
+      <th colspan="5">Messages envoyés</th>
+    </tr>
+    <tr>
+      <td class="entete">À</td>
+      <td class="entete">Date</td>
+      <td class="entete">Sujet</td>
+      <td class="entete">Contenu</td>
+      <td class="entete">&nbsp;</td>
+    </tr>
+
+    {{#if message_emis_public}}
+      {{#each message_emis_public}}
+        <tr>
+          {{#each recepteur}}
+            <td>{{username}} - {{nom}} {{prenom}}</td>
+          {{/each}}
+          <td>{{created_at}}</td>
+          <td>{{sujet}}</td>
+          <td>{{contenu}}</td>
+          <td>
+            <a class="button primary small" href="/principal/{{this._id}}/detail_message">Voir</a>
+            <br><br>
+            <form action="/principal/{{this._id}}/delete_message" method="POST">
+              <button class="btn small" type="submit">Supprimer</button>
+            </form>
+          </td>
+        </tr>
+      {{/each}}
+    {{/if}}
+    <tr><td class="anon" colspan="5">Messages Anonymes</td></tr>
+    {{#if message_emis_anon}}
+      {{#each message_emis_anon}}
+        <tr>
+          <td>Anonyme</td>
+          <td>{{created_at}}</td>
+          <td>{{sujet}}</td>
+          <td>{{contenu}}</td>
+          <td>
+            <a class="button primary small" href="/principal/{{this._id}}/detail_message">Voir</a>
+            <br><br>
+            <form action="/principal/{{this._id}}/delete_message" method="POST">
+              <button class="btn small" type="submit">Supprimer</button>
+            </form>
+          </td>
+        </tr>
+      {{/each}}
+    {{/if}}
+
+</table>
 </div>
-{{/if}}
+
 
 <script>
 
-  	let messages_non_lu 	= document.getElementById("messages_non_lu");
-  	let messages_lu 		= document.getElementById("messages_lu");
-  	let messages_envoyes 	= document.getElementById("messages_envoyes");
+    let message_non_lu = document.getElementById("message_non_lu");
+    let message_lu     = document.getElementById("message_lu");
+    let message_emis   = document.getElementById("message_emis");
 
-	function showAll() {
+  function showAll() {
 
-  		if (messages_non_lu.style.display === "none" && messages_lu.style.display === "none" && messages_envoyes.style.display === "none")
-  		{
-    		messages_non_lu.style.display = "block";
-    		messages_lu.style.display = "block";
-    		messages_envoyes.style.display = "block";
-  		} else {
-    		messages_non_lu.style.display = "none";
-    		messages_lu.style.display = "none";
-    		messages_envoyes.style.display = "none";
-    		messages_non_lu.style.display = "block";
-    		messages_lu.style.display = "block";
-    		messages_envoyes.style.display = "block";
-  		}
-	}
-
-
-	function showReceived(){
-
-  		if (messages_non_lu.style.display === "none" && messages_lu.style.display === "none" && messages_envoyes.style.display === "none")
-  		{
-    		messages_non_lu.style.display = "block";
-    		messages_lu.style.display = "block";
-  		} else {
-    		messages_non_lu.style.display = "none";
-    		messages_lu.style.display = "none";
-    		messages_envoyes.style.display = "none";
-    		messages_non_lu.style.display = "block";
-    		messages_lu.style.display = "block";
-  		}
-	}
+      if (message_non_lu.style.display == "none" && message_lu.style.display == "none" && message_emis.style.display == "none")
+      {
+        message_non_lu.style.display = "block";
+        message_lu.style.display = "block";
+        message_emis.style.display = "block";
+      } else {
+        message_non_lu.style.display = "none";
+        message_lu.style.display = "none";
+        message_emis.style.display = "none";
+        message_non_lu.style.display = "block";
+        message_lu.style.display = "block";
+        message_emis.style.display = "block";
+      }
+  }
 
 
-	function showSend(){
+  function showReceived(){
 
-  		if (messages_non_lu.style.display === "none" && messages_lu.style.display === "none" && messages_envoyes.style.display === "none")
-  		{
-    		messages_envoyes.style.display = "block";
-  		} else {
-    		messages_non_lu.style.display = "none";
-    		messages_lu.style.display = "none";
-    		messages_envoyes.style.display = "none";
-    		messages_envoyes.style.display = "block";
-  		}
-	}
+      if (message_non_lu.style.display == "none" && message_lu.style.display == "none" && message_emis.style.display == "none")
+      {
+        message_non_lu.style.display = "block";
+        message_lu.style.display = "block";
+      } else {
+        message_non_lu.style.display = "none";
+        message_lu.style.display = "none";
+        message_emis.style.display = "none";
+        message_non_lu.style.display = "block";
+        message_lu.style.display = "block";
+      }
+  }
+
+
+  function showSend(){
+
+      if (message_non_lu.style.display == "none" && message_lu.style.display == "none" && message_emis.style.display == "none")
+      {
+        message_emis.style.display = "block";
+      } else {
+        message_non_lu.style.display = "none";
+        message_lu.style.display = "none";
+        message_emis.style.display = "none";
+        message_emis.style.display = "block";
+      }
+  }
 </script>

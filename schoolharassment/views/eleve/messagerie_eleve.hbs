@@ -1,56 +1,63 @@
 <style>
-	.box{
-		display: flex;
-		justify-content: space-between;
-		flex-wrap: wrap;
-	}
-	#messages_non_lu{
-		display: block;
-	}
+  .box{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  #message_non_lu{
+    display: block;
+  }
 
-	#messages_lu{
-		display: block;
-	}
+  #message_lu{
+    display: block;
+    border: #708090 3px solid;
+  }
 
-	#messages_envoyes{
-		display: block;
-	}
+  #message_emis{
+    display: block;
+    border: #708090 3px solid;
+  }
 
-	table th{
-		background: slategrey;
-		color: #fff;
-		padding: 10px;
-		text-transform: uppercase;
-		letter-spacing: 5px;
-	}
+  table th{
+    background: slategrey;
+    color: #fff;
+    padding: 10px;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+  }
 
-	.entete{
-		text-transform: uppercase;
-	}
+  .entete{
+    text-transform: uppercase;
+  }
+
+  .lavend{
+    background: lavender;
+    color: #232943;
+  }
 
 </style>
 {{#if user}}
 
-	<h2>Messagerie de {{user.prenom}} {{user.nom}}</h2>
+  <h2>Messagerie de {{user.prenom}} {{user.nom}}</h2>
 
 {{/if}}
 <br>
 
 <div class="box">
-	<button id="tous" onclick="showAll()">Tous les messages</button>
-	<button id="recus" onclick="showReceived()">Messages reçus</button>
-	<button id="envoyes" onclick="showSend()">Messages envoyés</button>
-	<a href="/eleve/{{user._id}}/creation_message" class="button primary">Nouveau Message</a>
+  <button id="tous" onclick="showAll()">Tous les messages</button>
+  <button id="recus" onclick="showReceived()">Messages reçus</button>
+  <button id="envoyes" onclick="showSend()">Messages envoyés</button>
+  <a href="/eleve/{{user._id}}/creation_message" class="button primary">Nouveau Message</a>
 </div>
 
 <br>
 
+<div id="message_non_lu">
 {{#if message_non_lu}}
-<div id="messages_non_lu">
 
 <table style="border: lavender 3px solid;">
   <tr>
-    <th colspan="5">Messages non lus</th>
+    <th class="lavend" colspan="5">Messages non lus</th>
   </tr>
   <tr>
     <td class="entete">De</td>
@@ -68,6 +75,8 @@
     <td>{{sujet}}</td>
     <td>{{contenu}}</td>
     <td>
+      <a class="button primary small" href="/eleve/{{this._id}}/detail_message">Voir</a>
+      <br><br>
       <a class="button primary small" href="/eleve/{{this._id}}/reponse_message">Répondre</a>
       <br><br>
       <form action="/eleve/{{this._id}}/message_lu" method="POST">
@@ -78,12 +87,12 @@
   {{/each}}
  </table>
  <hr>
-
-</div>
 {{/if}}
+</div>
 
+
+<div id="message_lu">
 {{#if message_lu}}
-<div id="messages_lu">
 
  <table>
   <tr>
@@ -105,6 +114,8 @@
     <td>{{sujet}}</td>
     <td>{{contenu}}</td>
     <td>
+      <a class="button primary small" href="/eleve/{{this._id}}/detail_message">Voir</a>
+      <br><br>
       <a class="button small" href="/eleve/{{this._id}}/reponse_message">Répondre</a>
       <br><br>
       <form action="/eleve/{{this._id}}/delete_message" method="POST">
@@ -115,12 +126,11 @@
   {{/each}}
 </table>
 <hr>
-
-</div>
 {{/if}}
-
+</div>
+<br>
+<div id="message_emis">
 {{#if message_emis}}
-<div id="messages_envoyes">
 
 <table>
      <tr>
@@ -142,6 +152,8 @@
     <td>{{sujet}}</td>
     <td>{{contenu}}</td>
     <td>
+      <a class="button primary small" href="/eleve/{{this._id}}/detail_message">Voir</a>
+      <br><br>
         <form action="/eleve/{{this._id}}/delete_message" method="POST">
           <button class="btn small" type="submit">Supprimer</button>
         </form>
@@ -150,60 +162,60 @@
   {{/each}}
 </table>
 <hr>
-
-</div>
 {{/if}}
+</div>
+
 
 <script>
 
-  	let messages_non_lu 	= document.getElementById("messages_non_lu");
-  	let messages_lu 		= document.getElementById("messages_lu");
-  	let messages_envoyes 	= document.getElementById("messages_envoyes");
+    let message_non_lu = document.getElementById("message_non_lu");
+    let message_lu     = document.getElementById("message_lu");
+    let message_emis   = document.getElementById("message_emis");
 
-	function showAll() {
+  function showAll() {
 
-  		if (messages_non_lu.style.display === "none" && messages_lu.style.display === "none" && messages_envoyes.style.display === "none")
-  		{
-    		messages_non_lu.style.display = "block";
-    		messages_lu.style.display = "block";
-    		messages_envoyes.style.display = "block";
-  		} else {
-    		messages_non_lu.style.display = "none";
-    		messages_lu.style.display = "none";
-    		messages_envoyes.style.display = "none";
-    		messages_non_lu.style.display = "block";
-    		messages_lu.style.display = "block";
-    		messages_envoyes.style.display = "block";
-  		}
-	}
-
-
-	function showReceived(){
-
-  		if (messages_non_lu.style.display === "none" && messages_lu.style.display === "none" && messages_envoyes.style.display === "none")
-  		{
-    		messages_non_lu.style.display = "block";
-    		messages_lu.style.display = "block";
-  		} else {
-    		messages_non_lu.style.display = "none";
-    		messages_lu.style.display = "none";
-    		messages_envoyes.style.display = "none";
-    		messages_non_lu.style.display = "block";
-    		messages_lu.style.display = "block";
-  		}
-	}
+      if (message_non_lu.style.display == "none" && message_lu.style.display == "none" && message_emis.style.display == "none")
+      {
+        message_non_lu.style.display = "block";
+        message_lu.style.display = "block";
+        message_emis.style.display = "block";
+      } else {
+        message_non_lu.style.display = "none";
+        message_lu.style.display = "none";
+        message_emis.style.display = "none";
+        message_non_lu.style.display = "block";
+        message_lu.style.display = "block";
+        message_emis.style.display = "block";
+      }
+  }
 
 
-	function showSend(){
+  function showReceived(){
 
-  		if (messages_non_lu.style.display === "none" && messages_lu.style.display === "none" && messages_envoyes.style.display === "none")
-  		{
-    		messages_envoyes.style.display = "block";
-  		} else {
-    		messages_non_lu.style.display = "none";
-    		messages_lu.style.display = "none";
-    		messages_envoyes.style.display = "none";
-    		messages_envoyes.style.display = "block";
-  		}
-	}
+      if (message_non_lu.style.display == "none" && message_lu.style.display == "none" && message_emis.style.display == "none")
+      {
+        message_non_lu.style.display = "block";
+        message_lu.style.display = "block";
+      } else {
+        message_non_lu.style.display = "none";
+        message_lu.style.display = "none";
+        message_emis.style.display = "none";
+        message_non_lu.style.display = "block";
+        message_lu.style.display = "block";
+      }
+  }
+
+
+  function showSend(){
+
+      if (message_non_lu.style.display == "none" && message_lu.style.display == "none" && message_emis.style.display == "none")
+      {
+        message_emis.style.display = "block";
+      } else {
+        message_non_lu.style.display = "none";
+        message_lu.style.display = "none";
+        message_emis.style.display = "none";
+        message_emis.style.display = "block";
+      }
+  }
 </script>
