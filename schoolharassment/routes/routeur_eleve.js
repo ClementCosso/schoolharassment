@@ -33,6 +33,7 @@
 *               e) METHOD POST SUPPRESSION MESSAGE
 *               f) METHOD GET REPONSE MESSAGE
 *               g) METHOD POST REPONSE MESSAGE
+*               h) METHOD GET DETAIL MESSAGE
 *
 *
 ******************************************************************************************************************************
@@ -178,25 +179,38 @@ router.post('/eleve/edit', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, 
 
 
 // a) METHOD GET PAGE MESSAGERIE
-
-router.get("/eleve/:id/messagerie_eleve", checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-  User.findOne({_id: req.params.id}) 
-  .then(user => {
-    Message.find({emetteur: { $eq: user._id }})
-    .populate('recepteur', 'nom prenom username')
-    .then(message_emis => {
-      Message.find({$and: [ {lu: { $eq: 'OUI' }} , {recepteur: { $eq: user._id }} ] })
-      .populate('emetteur', 'nom prenom username')
-      .then(message_lu => {
-        Message.find({$and: [ {lu: { $eq: 'NON' }} , {recepteur: { $eq: user._id }} ] })
-        .populate('emetteur', 'nom prenom username')
-         .then(message_non_lu => {
-            res.render('eleve/messagerie_eleve', {layout: 'layout_eleve.hbs', user: user, message_emis: message_emis, message_lu: message_lu, message_non_lu: message_non_lu});
-        })
-      })
-    })
-  })
-});
+router.get(
+  "/eleve/:id/messagerie_eleve",
+  checkEleve,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    User.findOne({ _id: req.params.id }).then(user => {
+      Message.find({ emetteur: { $eq: user._id } })
+        .populate("recepteur", "nom prenom username")
+        .then(message_emis => {
+          Message.find({
+            $and: [{ lu: { $eq: "OUI" } }, { recepteur: { $eq: user._id } }]
+          })
+            .populate("emetteur", "nom prenom username")
+            .then(message_lu => {
+              Message.find({
+                $and: [{ lu: { $eq: "NON" } }, { recepteur: { $eq: user._id } }]
+              })
+                .populate("emetteur", "nom prenom username")
+                .then(message_non_lu => {
+                  res.render("eleve/messagerie_eleve", {
+                    layout: "layout_eleve.hbs",
+                    user: user,
+                    message_emis: message_emis,
+                    message_lu: message_lu,
+                    message_non_lu: message_non_lu
+                  });
+                });
+            });
+        });
+    });
+  }
+);
 
 // b) METHOD GET PAGE NOUVEAU MESSAGE
 
@@ -220,6 +234,7 @@ router.post('/eleve/creation_message', checkEleve, ensureLogin.ensureLoggedIn(),
   const contenu   = req.body.contenu;
   const statut    = req.body.statut;
   const lu        = req.body.lu;
+  const objet     = req.body.objet;
 
   if (sujet === "" || contenu === "") {
     res.render("eleve/creation_message", { message: "Veuillez remplir tous les champs" });
@@ -238,7 +253,8 @@ router.post('/eleve/creation_message', checkEleve, ensureLogin.ensureLoggedIn(),
       sujet,
       contenu,
       statut,
-      lu
+      lu,
+      objet
     });
 
     newMessage.save()
@@ -303,6 +319,7 @@ router.post('/eleve/reponse_message', checkEleve, ensureLogin.ensureLoggedIn(), 
   const contenu   = req.body.contenu;
   const statut    = req.body.statut;
   const lu        = req.body.lu;
+  const objet     = req.body.objet;
 
   if (sujet === "" || contenu === "") {
     res.render("eleve/reponse_message", { message: "Veuillez remplir tous les champs" });
@@ -321,7 +338,8 @@ router.post('/eleve/reponse_message', checkEleve, ensureLogin.ensureLoggedIn(), 
       sujet,
       contenu,
       statut,
-      lu
+      lu,
+      objet
     });
 
     newMessage.save()
@@ -334,6 +352,26 @@ router.post('/eleve/reponse_message', checkEleve, ensureLogin.ensureLoggedIn(), 
   });
 
 });
+
+// h) METHOD GET DETAIL MESSAGE
+router.get(
+  "/eleve/:id/detail_message",
+  checkEleve,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+        Message.findOne({ _id: req.params.id })
+        .populate("recepteur", "nom prenom username")
+        .then(reponse_message => {
+          res.render("eleve/detail_message", {
+            layout: "layout_eleve.hbs",
+            reponse_message: reponse_message
+          });
+        })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+);
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

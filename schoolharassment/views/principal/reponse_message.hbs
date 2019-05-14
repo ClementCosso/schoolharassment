@@ -1,7 +1,8 @@
-<h2>Répondre au message de {{reponse_message.emetteur}}</h2>
+<h2>Répondre au message {{reponse_message._id}}</h2>
 {{user._id}}
 <hr>
 <div class="box">
+    <p>Objet : {{reponse_message.objet}}</p>
 	<p>Sujet : {{reponse_message.sujet}}</p>
 	<p>Contenu : {{reponse_message.contenu}}</p>
 </div>
@@ -10,7 +11,8 @@
 
 	<input id="emetteur" type="hidden" name="emetteur" value="{{reponse_message.recepteur}}">
 	<input id="recepteur" type="hidden" name="recepteur" value="{{reponse_message.emetteur}}">
-    <input id="statut" type="hidden" name="statut" value="EMIS">
+    <input id="statut" type="hidden" name="statut" value="{{reponse_message.statut}}">
+    <input id="objet" type="hidden" name="objet" value="{{reponse_message.objet}}">
     <input id="lu" type="hidden" name="lu" value="NON">
     
     <label for="sujet">Sujet</label>

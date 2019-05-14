@@ -3,7 +3,7 @@
 <form action="/principal/creation_message" method="POST" id="form-container">
 
 	<input id="emetteur" type="hidden" name="emetteur" value="{{user._id}}">
-    <input id="statut" type="hidden" name="statut" value="EMIS">
+    <input id="statut" type="hidden" name="statut" value="PUBLIC">
     <input id="lu" type="hidden" name="lu" value="NON">
 
     <label for="recepteur">Destinataire</label>
@@ -15,7 +15,19 @@
 
     <br>
     
-    <label for="sujet">Sujet</label>
+    <label for="objet">Objet</label>
+    <select name="objet" id="objet">
+      <option value="HARCELEMENT PHYSIQUE">Harcèlement physique</option>
+      <option value="HARCELEMENT VERBAL">Harcèlement verbal</option>
+      <option value="HARCELEMENT SOCIAL">Harcèlement social</option>
+      <option value="CYBERHARCELEMENT">Cyberharcèlement</option>
+      <option value="HARCELEMENT SEXUEL">Harcèlement sexuel</option>
+      <option value="AUTRE TYPE DE HARCELEMENT">Autre type de Harcèlement</option>
+    </select>
+
+    <br>
+
+    <label for="sujet">Titre</label>
     <input id="sujet" type="text" name="sujet">
 
     <br>
