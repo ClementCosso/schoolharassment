@@ -53,6 +53,7 @@
  *               f) METHOD GET REPONSE MESSAGE
  *               g) METHOD POST REPONSE MESSAGE
  *               h) METHOD GET DETAIL MESSAGE
+ *               i) METHOD ARCHIVE MESSAGE
  *
  *
  ******************************************************************************************************************************
@@ -542,20 +543,20 @@ router.post("/principal/creation_etablissement", (req, res, next) => {
 // a) METHOD GET PAGE MESSAGERIE
 router.get("/principal/:id/messagerie_principal", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
   User.findOne({ _id: req.params.id }).then(user => {
-    Message.find({ $and: [ {emetteur: { $eq: user._id }}, {statut: { $eq: "PUBLIC"}} ] })
+    Message.find({ $and: [ {emetteur: { $eq: user._id }}, {statut: { $eq: "PUBLIC" }}, {archive: { $eq: "NON" }} ] })
     .populate("recepteur", "nom prenom username")
     .then(message_emis_public => {
-      Message.find({ $and: [ {emetteur: { $eq: user._id }}, {statut: { $eq: "ANON"}} ] })
+      Message.find({ $and: [ {emetteur: { $eq: user._id }}, {statut: { $eq: "ANON" }}, {archive: { $eq: "NON" }} ] })
       .then(message_emis_anon => {
         Message.find({ $and: [ {lu: { $eq: "OUI" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "PUBLIC"}} ] })
         .populate("emetteur", "nom prenom username")
         .then(message_lu_public => {
-          Message.find({ $and: [ {lu: { $eq: "OUI" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "ANON"}} ] })
+          Message.find({ $and: [ {lu: { $eq: "OUI" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "ANON" }} ] })
           .then(message_lu_anon => {
-            Message.find({ $and: [ {lu: { $eq: "NON" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "PUBLIC"}} ] })
+            Message.find({ $and: [ {lu: { $eq: "NON" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "PUBLIC" }} ] })
             .populate("emetteur", "nom prenom username")
             .then(message_non_lu_public => {
-              Message.find({ $and: [ {lu: { $eq: "NON" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "ANON"}} ] })
+              Message.find({ $and: [ {lu: { $eq: "NON" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "ANON" }} ] })
               .then(message_non_lu_anon => {
                 res.render("principal/messagerie_principal", {
                   layout: "layout_principal.hbs",
@@ -602,13 +603,14 @@ router.post(
   checkPrincipal,
   ensureLogin.ensureLoggedIn(),
   (req, res, next) => {
-    const emetteur = req.body.emetteur;
+    const emetteur  = req.body.emetteur;
     const recepteur = req.body.recepteur;
-    const sujet = req.body.sujet;
-    const contenu = req.body.contenu;
-    const statut = req.body.statut;
-    const lu = req.body.lu;
+    const sujet     = req.body.sujet;
+    const contenu   = req.body.contenu;
+    const statut    = req.body.statut;
+    const lu        = req.body.lu;
     const objet     = req.body.objet;
+    const archive   = req.body.archive;
 
     if (sujet === "" || contenu === "") {
       res.render("principal/creation_message", {
@@ -632,7 +634,8 @@ router.post(
         contenu,
         statut,
         lu,
-        objet
+        objet,
+        archive
       });
 
       newMessage
@@ -717,6 +720,7 @@ router.post(
     const statut = req.body.statut;
     const lu = req.body.lu;
     const objet = req.body.objet;
+    const archive = req.body.archive;
 
     if (sujet === "" || contenu === "") {
       res.render("principal/reponse_message", {
@@ -740,7 +744,8 @@ router.post(
         contenu,
         statut,
         lu,
-        objet
+        objet,
+        archive
       });
 
       newMessage
@@ -774,6 +779,18 @@ router.get(
       .catch(error => {
         console.log(error);
       });
+  }
+);
+
+// i) METHOD ARCHIVE MESSAGE
+router.post("/principal/:id/archive_message", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+
+    const archive = req.body.archive;
+
+    Message.findOneAndUpdate({ _id: req.params.id },{ $set: { archive: "OUI" } })
+    .then(user => {
+      res.redirect("back");
+    });
   }
 );
 

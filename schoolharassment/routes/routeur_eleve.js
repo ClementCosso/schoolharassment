@@ -34,6 +34,7 @@
 *               f) METHOD GET REPONSE MESSAGE
 *               g) METHOD POST REPONSE MESSAGE
 *               h) METHOD GET DETAIL MESSAGE
+*               i) METHOD POST ARCHIVE MESSAGE
 *
 *
 ******************************************************************************************************************************
@@ -185,7 +186,7 @@ router.get(
   ensureLogin.ensureLoggedIn(),
   (req, res, next) => {
     User.findOne({ _id: req.params.id }).then(user => {
-      Message.find({ emetteur: { $eq: user._id } })
+      Message.find({ $and : [ {emetteur: { $eq: user._id }}, {archive: { $eq: "NON" }} ] })
         .populate("recepteur", "nom prenom username")
         .then(message_emis => {
           Message.find({
@@ -235,6 +236,7 @@ router.post('/eleve/creation_message', checkEleve, ensureLogin.ensureLoggedIn(),
   const statut    = req.body.statut;
   const lu        = req.body.lu;
   const objet     = req.body.objet;
+  const archive     = req.body.archive;
 
   if (sujet === "" || contenu === "") {
     res.render("eleve/creation_message", { message: "Veuillez remplir tous les champs" });
@@ -254,7 +256,8 @@ router.post('/eleve/creation_message', checkEleve, ensureLogin.ensureLoggedIn(),
       contenu,
       statut,
       lu,
-      objet
+      objet,
+      archive
     });
 
     newMessage.save()
@@ -320,6 +323,7 @@ router.post('/eleve/reponse_message', checkEleve, ensureLogin.ensureLoggedIn(), 
   const statut    = req.body.statut;
   const lu        = req.body.lu;
   const objet     = req.body.objet;
+  const archive   = req.body.archive;
 
   if (sujet === "" || contenu === "") {
     res.render("eleve/reponse_message", { message: "Veuillez remplir tous les champs" });
@@ -339,7 +343,8 @@ router.post('/eleve/reponse_message', checkEleve, ensureLogin.ensureLoggedIn(), 
       contenu,
       statut,
       lu,
-      objet
+      objet,
+      archive
     });
 
     newMessage.save()
@@ -370,6 +375,18 @@ router.get(
       .catch(error => {
         console.log(error);
       });
+  }
+);
+
+// i) METHOD POST ARCHIVE MESSAGE
+router.post("/eleve/:id/archive_message", checkEleve, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+
+    const archive = req.body.archive;
+
+    Message.findOneAndUpdate({ _id: req.params.id },{ $set: { archive: "OUI" } })
+    .then(user => {
+      res.redirect("back");
+    });
   }
 );
 
