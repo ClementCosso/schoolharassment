@@ -1,26 +1,27 @@
 <h2>Etablissements</h2>
 <br>
 {{#each etablissements}}
-    	<h4>{{this.nom}}</h4>
+<h4>{{this.nom}}</h4>
 
-    	<p>
-    		{{this.adresse}}<br>
-    		{{this.cp}} {{this.ville}}<br>
-			{{this.departement}}<br>
-			{{this.telephone}}<br>
-    	</p>
+<p>
+	{{this.adresse}}<br>
+	{{this.cp}} {{this.ville}}<br>
+	{{this.departement}}<br>
+	{{this.telephone}}<br>
+</p>
 
-    	<div style="display: flex;">
-    		<h5 style="border: 2px solid white; padding: 10px; width: 133px; text-align: center; text-transform: uppercase; height:40px">
-    			<a href="/principal/{{this._id}}/update_etablissement">Modifier</a>
-    		</h5>
-    		&nbsp;
-    		<form action="/principal/{{this._id}}/delete" method="POST">
-    			<button type="submit">Supprimer</button>
-    		</form>
-    	</div>
-    	
-    	
-    <hr>
+<div style="display: flex;">
+	<h5
+		style="border: 2px solid white; padding: 10px; width: 133px; text-align: center; text-transform: uppercase; height:40px">
+		<a href="/principal/{{this._id}}/update_etablissement">Modifier</a>
+	</h5>
+	&nbsp;
+	<form action="/principal/{{this._id}}/delete" method="POST">
+		<button type="submit">Supprimer</button>
+	</form>
+</div>
+
+
+<hr>
 {{/each}}
 <br>
