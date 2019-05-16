@@ -1,0 +1,161 @@
+<style>
+	#mois_en_cours{
+		padding: 1em;
+		border: lavender 1px solid;
+		display: none;
+	}
+
+	#annee_en_cours{
+		padding: 1em;
+		border: lavender 1px solid;
+		display: none;
+	}
+</style>
+<h2>Rapport type de harcèlement</h2>
+<hr>
+<button type="button" class="button primary" onclick="display_mois_en_cours()">Mois en cours</button>
+<button type="button" class="button primary" onclick="display_annee_en_cours()">Année en cours</button>
+<hr>
+
+<div id="mois_en_cours">
+	<h3>Rapport <span id="start"></span></h3>
+<br>
+<table id="tblData">
+	<tr>
+		<th>Harcèlement physique</th>
+		<th>Harcèlement verbal</th>
+		<th>Harcèlement social</th>
+		<th>Cyberharcèlement</th>
+		<th>Harcèlement sexuel</th>
+		<th>Autre type de harcèlement</th>
+	</tr>
+	<tr>
+		<td align="center">{{category_hp_mois}}</td>
+		<td align="center">{{category_hv_mois}}</td>
+		<td align="center">{{category_hso_mois}}</td>
+		<td align="center">{{category_cy_mois}}</td>
+		<td align="center">{{category_hse_mois}}</td>
+		<td align="center">{{category_ah_mois}}</td>
+	</tr>
+</table>
+<button class="button icon fa-download" onclick="exportTableToExcel('tblData')">Exporter</button>
+<button onclick="printData()">Imprimer</button>
+</div>
+<br>
+<div id="annee_en_cours">
+	<h3>Rapport année <span id="start_annee"></span></h3>
+<br>
+<table id="tblData_annee">
+	<tr>
+		<th>Harcèlement physique</th>
+		<th>Harcèlement verbal</th>
+		<th>Harcèlement social</th>
+		<th>Cyberharcèlement</th>
+		<th>Harcèlement sexuel</th>
+		<th>Autre type de harcèlement</th>
+	</tr>
+	<tr>
+		<td align="center">{{category_hp_annee}}</td>
+		<td align="center">{{category_hv_annee}}</td>
+		<td align="center">{{category_hso_annee}}</td>
+		<td align="center">{{category_cy_annee}}</td>
+		<td align="center">{{category_hse_annee}}</td>
+		<td align="center">{{category_ah_annee}}</td>
+	</tr>
+</table>
+<button class="button icon fa-download" onclick="exportTableToExcel('tblData_annee')">Exporter</button>
+<button onclick="printData_annee()">Imprimer</button>
+</div>
+
+<script>
+  	var month = new Array();
+
+  	month[0]  = "Janvier";
+  	month[1]  = "Février";
+  	month[2]  = "Mars";
+  	month[3]  = "Avril";
+  	month[4]  = "Mai";
+  	month[5]  = "Juin";
+ 	month[6]  = "Juillet";
+  	month[7]  = "Août";
+  	month[8]  = "Septembre";
+  	month[9]  = "Octobre";
+  	month[10] = "Novembre";
+  	month[11] = "Decembre";
+
+  	var d = new Date();
+  	var n = month[d.getMonth()];
+  	var y = d.getFullYear();
+  	var month_year = n+' '+y;
+  	document.getElementById("start").innerHTML = month_year;
+  	document.getElementById("start_annee").innerHTML = y;
+
+  	function exportTableToExcel(tableID, filename = ''){
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+    
+    // Specify file name
+    filename = filename?filename+'.xls':'rapport_mensuel_'+month_year+'.xls';
+    
+    // Create download link element
+    downloadLink = document.createElement("a");
+    
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['\ufeff', tableHTML], {
+            type: dataType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+    
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
+    }
+}
+
+function printData()
+{
+   var divToPrint=document.getElementById("tblData");
+   newWin= window.open("");
+   newWin.document.write(divToPrint.outerHTML);
+   newWin.print();
+   newWin.close();
+}
+
+function printData_annee()
+{
+   var divToPrint=document.getElementById("tblData_annee");
+   newWin= window.open("");
+   newWin.document.write(divToPrint.outerHTML);
+   newWin.print();
+   newWin.close();
+}
+	
+
+function display_mois_en_cours() {
+  var x = document.getElementById("mois_en_cours");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+function display_annee_en_cours() {
+  var x = document.getElementById("annee_en_cours");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+</script>
