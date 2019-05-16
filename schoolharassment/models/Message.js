@@ -9,6 +9,7 @@ const messageSchema = new Schema(
 	  	contenu		: { type: String, required: true },
 	  	statut		: { type: String, required: true },
 	  	lu			: { type: String, required: true },
+	  	archive		: { type: String, required: true },
 	  	objet 		: { type: String,
       				enum: [
         				"HARCELEMENT PHYSIQUE",

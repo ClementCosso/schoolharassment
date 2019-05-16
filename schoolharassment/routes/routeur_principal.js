@@ -54,6 +54,11 @@
  *               f) METHOD GET REPONSE MESSAGE
  *               g) METHOD POST REPONSE MESSAGE
  *               h) METHOD GET DETAIL MESSAGE
+ *               i) METHOD ARCHIVE MESSAGE
+ *
+ *        6/ RAPPORTS
+ *
+ *               a) METHOD GET RAPPORT TYPE HARCELEMENT MOIS EN COURS
  *
  *
  ******************************************************************************************************************************
@@ -565,65 +570,33 @@ router.post("/principal/:id/liste_etablissement", (req, res, next) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // a) METHOD GET PAGE MESSAGERIE
-router.get(
-  "/principal/:id/messagerie_principal",
-  checkPrincipal,
-  ensureLogin.ensureLoggedIn(),
-  (req, res, next) => {
-    User.findOne({ _id: req.params.id }).then(user => {
-      Message.find({
-        $and: [{ emetteur: { $eq: user._id } }, { statut: { $eq: "PUBLIC" } }]
-      })
-        .populate("recepteur", "nom prenom username")
-        .then(message_emis_public => {
-          Message.find({
-            $and: [{ emetteur: { $eq: user._id } }, { statut: { $eq: "ANON" } }]
-          }).then(message_emis_anon => {
-            Message.find({
-              $and: [
-                { lu: { $eq: "OUI" } },
-                { recepteur: { $eq: user._id } },
-                { statut: { $eq: "PUBLIC" } }
-              ]
-            })
-              .populate("emetteur", "nom prenom username")
-              .then(message_lu_public => {
-                Message.find({
-                  $and: [
-                    { lu: { $eq: "OUI" } },
-                    { recepteur: { $eq: user._id } },
-                    { statut: { $eq: "ANON" } }
-                  ]
-                }).then(message_lu_anon => {
-                  Message.find({
-                    $and: [
-                      { lu: { $eq: "NON" } },
-                      { recepteur: { $eq: user._id } },
-                      { statut: { $eq: "PUBLIC" } }
-                    ]
-                  })
-                    .populate("emetteur", "nom prenom username")
-                    .then(message_non_lu_public => {
-                      Message.find({
-                        $and: [
-                          { lu: { $eq: "NON" } },
-                          { recepteur: { $eq: user._id } },
-                          { statut: { $eq: "ANON" } }
-                        ]
-                      }).then(message_non_lu_anon => {
-                        res.render("principal/messagerie_principal", {
-                          layout: "layout_principal.hbs",
-                          user: user,
-                          message_emis_public: message_emis_public,
-                          message_emis_anon: message_emis_anon,
-                          message_lu_public: message_lu_public,
-                          message_lu_anon: message_lu_anon,
-                          message_non_lu_public: message_non_lu_public,
-                          message_non_lu_anon: message_non_lu_anon
-                        });
-                      });
-                    });
-                });
+router.get("/principal/:id/messagerie_principal", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+  User.findOne({ _id: req.params.id }).then(user => {
+    Message.find({ $and: [ {emetteur: { $eq: user._id }}, {statut: { $eq: "PUBLIC" }}, {archive: { $eq: "NON" }} ] })
+    .populate("recepteur", "nom prenom username")
+    .then(message_emis_public => {
+      Message.find({ $and: [ {emetteur: { $eq: user._id }}, {statut: { $eq: "ANON" }}, {archive: { $eq: "NON" }} ] })
+      .then(message_emis_anon => {
+        Message.find({ $and: [ {lu: { $eq: "OUI" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "PUBLIC"}} ] })
+        .populate("emetteur", "nom prenom username")
+        .then(message_lu_public => {
+          Message.find({ $and: [ {lu: { $eq: "OUI" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "ANON" }} ] })
+          .then(message_lu_anon => {
+            Message.find({ $and: [ {lu: { $eq: "NON" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "PUBLIC" }} ] })
+            .populate("emetteur", "nom prenom username")
+            .then(message_non_lu_public => {
+              Message.find({ $and: [ {lu: { $eq: "NON" }}, {recepteur: { $eq: user._id }}, {statut: { $eq: "ANON" }} ] })
+              .then(message_non_lu_anon => {
+                res.render("principal/messagerie_principal", {
+                  layout: "layout_principal.hbs",
+                  user: user,
+                  message_emis_public: message_emis_public,
+                  message_emis_anon: message_emis_anon,
+                  message_lu_public: message_lu_public,
+                  message_lu_anon: message_lu_anon,
+                  message_non_lu_public: message_non_lu_public,
+                  message_non_lu_anon: message_non_lu_anon
+                });  
               });
           });
         });
@@ -657,13 +630,14 @@ router.post(
   checkPrincipal,
   ensureLogin.ensureLoggedIn(),
   (req, res, next) => {
-    const emetteur = req.body.emetteur;
+    const emetteur  = req.body.emetteur;
     const recepteur = req.body.recepteur;
-    const sujet = req.body.sujet;
-    const contenu = req.body.contenu;
-    const statut = req.body.statut;
-    const lu = req.body.lu;
-    const objet = req.body.objet;
+    const sujet     = req.body.sujet;
+    const contenu   = req.body.contenu;
+    const statut    = req.body.statut;
+    const lu        = req.body.lu;
+    const objet     = req.body.objet;
+    const archive   = req.body.archive;
 
     if (sujet === "" || contenu === "") {
       res.render("principal/creation_message", {
@@ -687,7 +661,8 @@ router.post(
         contenu,
         statut,
         lu,
-        objet
+        objet,
+        archive
       });
 
       newMessage
@@ -772,6 +747,7 @@ router.post(
     const statut = req.body.statut;
     const lu = req.body.lu;
     const objet = req.body.objet;
+    const archive = req.body.archive;
 
     if (sujet === "" || contenu === "") {
       res.render("principal/reponse_message", {
@@ -795,7 +771,8 @@ router.post(
         contenu,
         statut,
         lu,
-        objet
+        objet,
+        archive
       });
 
       newMessage
@@ -831,6 +808,77 @@ router.get(
       });
   }
 );
+
+// i) METHOD ARCHIVE MESSAGE
+router.post("/principal/:id/archive_message", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+
+    const archive = req.body.archive;
+
+    Message.findOneAndUpdate({ _id: req.params.id },{ $set: { archive: "OUI" } })
+    .then(user => {
+      res.redirect("back");
+    });
+  }
+);
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                    6/ R A P P O R T S                                                    //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// a) METHOD GET RAPPORT TYPE HARCELEMENT MOIS EN COURS
+
+var date  = new Date();
+var res   = date.toISOString();
+var a     = res.slice(0, 8)
+var start = a+"01";
+var end   = a+"31";
+var debut_annee = res.slice(0,4)+"-01-01";
+var fin_annee = res.slice(0,4)+"-12-31";
+
+router.get("/principal/rapport", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
+    Message.find({ created_at: { $gte: (start), $lt : (end) } }).count({ objet: "HARCELEMENT PHYSIQUE" })
+    .then(category_hp_mois => {
+       Message.find({ created_at: { $gte: (debut_annee), $lt : (fin_annee) } }).count({ objet: "HARCELEMENT PHYSIQUE" })
+      .then(category_hp_annee => {
+        Message.find({ created_at: { $gte: (start), $lt : (end) } }).count({ objet: "HARCELEMENT VERBAL" })
+        .then(category_hv_mois => {
+          Message.find({ created_at: { $gte: (debut_annee), $lt : (fin_annee) } }).count({ objet: "HARCELEMENT VERBAL" })
+          .then(category_hv_annee => {
+            Message.find({ created_at: { $gte: (start), $lt : (end) } }).count({ objet: "CYBERHARCELEMENT" })
+            .then(category_cy_mois => {
+              Message.find({ created_at: { $gte: (debut_annee), $lt : (fin_annee) } }).count({ objet: "CYBERHARCELEMENT" })
+              .then(category_cy_annee => {
+                Message.find({ created_at: { $gte: (start), $lt : (end) } }).count({ objet: "HARCELEMENT SOCIAL" })
+                .then(category_hso_mois => {
+                  Message.find({ created_at: { $gte: (debut_annee), $lt : (fin_annee) } }).count({ objet: "HARCELEMENT SOCIAL" })
+                  .then(category_hso_annee => {
+                    Message.find({ created_at: { $gte: (start), $lt : (end) } }).count({ objet: "HARCELEMENT SEXUEL" })
+                    .then(category_hse_mois => {
+                      Message.find({ created_at: { $gte: (debut_annee), $lt : (fin_annee) } }).count({ objet: "HARCELEMENT SEXUEL" })
+                      .then(category_hse_annee => {
+                        Message.find({ created_at: { $gte: (start), $lt : (end) } }).count({ objet: "AUTRE TYPE DE HARCELEMENT" })
+                        .then(category_ah_mois => {
+                          Message.find({ created_at: { $gte: (debut_annee), $lt : (fin_annee) } }).count({ objet: "AUTRE TYPE DE HARCELEMENT" })
+                          .then(category_ah_annee => {
+                            res.render("principal/rapport", { layout: "layout_principal.hbs", category_hp_mois, category_hv_mois, category_cy_mois, category_hso_mois, category_hse_mois, category_ah_mois, category_hp_annee, category_hv_annee, category_cy_annee, category_hso_annee, category_hse_annee, category_ah_annee });
+                          })
+                        })
+                      })
+                    })
+                  })
+                })
+              })
+            })  
+          })
+        })
+      })    
+    })
+    .catch(error => {
+        console.log(error);
+    });
+  });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
