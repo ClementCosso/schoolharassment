@@ -237,6 +237,7 @@ router.post('/eleve/creation_message', checkEleve, ensureLogin.ensureLoggedIn(),
   const lu        = req.body.lu;
   const objet     = req.body.objet;
   const archive     = req.body.archive;
+  const signalement     = req.body.signalement;
 
   if (sujet === "" || contenu === "") {
     res.render("eleve/creation_message", { message: "Veuillez remplir tous les champs" });
@@ -257,7 +258,8 @@ router.post('/eleve/creation_message', checkEleve, ensureLogin.ensureLoggedIn(),
       statut,
       lu,
       objet,
-      archive
+      archive,
+      signalement
     });
 
     newMessage.save()
@@ -324,6 +326,7 @@ router.post('/eleve/reponse_message', checkEleve, ensureLogin.ensureLoggedIn(), 
   const lu        = req.body.lu;
   const objet     = req.body.objet;
   const archive   = req.body.archive;
+  const signalement   = req.body.signalement;
 
   if (sujet === "" || contenu === "") {
     res.render("eleve/reponse_message", { message: "Veuillez remplir tous les champs" });
@@ -344,7 +347,8 @@ router.post('/eleve/reponse_message', checkEleve, ensureLogin.ensureLoggedIn(), 
       statut,
       lu,
       objet,
-      archive
+      archive,
+      signalement
     });
 
     newMessage.save()

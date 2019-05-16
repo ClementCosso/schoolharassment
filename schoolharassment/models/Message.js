@@ -10,6 +10,7 @@ const messageSchema = new Schema(
 	  	statut		: { type: String, required: true },
 	  	lu			: { type: String, required: true },
 	  	archive		: { type: String, required: true },
+	  	signalement	: { type: Boolean, required: true },
 	  	objet 		: { type: String,
       				enum: [
         				"HARCELEMENT PHYSIQUE",
