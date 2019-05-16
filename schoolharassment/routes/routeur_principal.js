@@ -598,11 +598,13 @@ router.get("/principal/:id/messagerie_principal", checkPrincipal, ensureLogin.en
                   message_non_lu_anon: message_non_lu_anon
                 });  
               });
+            });
           });
         });
+      });
     });
-  }
-);
+  });
+});
 
 // b) METHOD GET NOUVEAU MESSAGE
 router.get(
