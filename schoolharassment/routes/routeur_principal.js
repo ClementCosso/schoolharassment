@@ -417,6 +417,22 @@ router.post("/principal/:id/liste_utilisateur", (req, res, next) => {
   });
 });
 
+// h) METHOD GET PAGE PROFILE UTILISATEUR
+
+router.get("/principal/:id/profile_user", (req, res, next) => {
+  User.findOne({ _id: req.params.id })
+    .then(user => {
+      res.render("principal/profile_user", {
+        layout: "layout_principal.hbs",
+        user: user
+      });
+    })
+    .catch(error => {
+      console.log(error);
+    });
+});
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           4/ E T A B L I S S E M E N T S                                                 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -833,6 +849,10 @@ router.post(
   }
 );
 
+
+
+
+
 // h) METHOD GET DETAIL MESSAGE
 router.get(
   "/principal/:id/detail_message",
@@ -842,10 +862,17 @@ router.get(
     Message.findOne({ _id: req.params.id })
       .populate("recepteur", "nom prenom username")
       .then(reponse_message => {
+        Message.find({ $and: [
+                          { _id: { $eq: req.params.id } },
+                          { statut: { $eq: "PUBLIC" } }
+                        ]})
+        .then(public => {
         res.render("principal/detail_message", {
           layout: "layout_principal.hbs",
-          reponse_message: reponse_message
+          reponse_message: reponse_message,
+          public: public
         });
+      });
       })
       .catch(error => {
         console.log(error);

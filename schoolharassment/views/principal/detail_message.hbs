@@ -1,8 +1,19 @@
-<h2>Message de {{#if reponse_message}}{{#each reponse_message}}{{#each emetteur}} {{username}} - {{nom}} {{prenom}} {{/each}}{{/each}}{{/if}}</h2>
-<hr>
+<br>
+{{#if public}}
 <div class="box">
 	<p>Objet : {{reponse_message.objet}}</p>
 	<p>Sujet : {{reponse_message.sujet}}</p>
 	<p>Contenu : {{reponse_message.contenu}}</p>
 </div>
-<input type="button" value="Revenir" onclick="window.history.back()" /> 
+
+
+<a style="border: 2px solid white;
+padding: 10px;" href="/principal/{{reponse_message.emetteur}}/profile_user">Voir fiche utilisateur</a>
+{{else}}
+<div class="box">
+	<p>Objet : {{reponse_message.objet}}</p>
+	<p>Sujet : {{reponse_message.sujet}}</p>
+	<p>Contenu : {{reponse_message.contenu}}</p>
+</div>
+{{/if}}
+<input type="button" value="Revenir" onclick="window.history.back()" />
