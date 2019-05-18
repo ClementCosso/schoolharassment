@@ -12,6 +12,8 @@
  *
  *
  *
+ *
+ *
  *******************************************************************************************
  */
 /* -------------------------------------------------------------------------------------- */
@@ -40,6 +42,10 @@ const Message = require("../models/Message");
 // METHOD GET PAGE LOGIN
 router.get("/", (req, res, next) => {
   res.render("landing", { layout: false });
+});
+
+router.get("/mode_emploi", (req, res, next) => {
+  res.render("mode_emploi", { layout: false });
 });
 
 module.exports = router;
