@@ -6,6 +6,7 @@
   <input id="lu" type="hidden" name="lu" value="NON">
   <input id="statut" type="hidden" name="statut" value="PUBLIC">
   <input id="archive" type="hidden" name="archive" value="NON">
+  <input id="priority_level" type="hidden" name="priority_level" value="normal">
 
   <label for="recepteur">Destinataire</label>
     <select name="recepteur" id="recepteur">
@@ -26,7 +27,24 @@
       <option value="AUTRE TYPE DE HARCELEMENT">Autre type de Harcèlement</option>
     </select>
 
-  <br>
+    <br>
+
+    <p>Niveau de priorité</p>
+
+    <div id="priorities">
+      
+      <input type="radio" id="normal" name="priority" value="normal">
+      <label for="normal">normal</label>
+
+      <input type="radio" id="important" name="priority" value="important">
+      <label for="important">important</label>
+
+      <input type="radio" id="urgent" name="priority" value="urgent">
+      <label for="urgent">urgent</label>
+
+    </div>
+
+    <br>
     
     <label for="sujet">Titre</label>
     <input id="sujet" type="text" name="sujet">
@@ -66,5 +84,16 @@ function anonFunction() {
   }
   
 }
+
+(function (){
+
+    var radios = document.getElementsByName('priority');
+
+    for(var i = 0; i < radios.length; i++){
+        radios[i].onclick = function(){
+            document.getElementById('priority_level').value = this.value;
+        }
+    }
+})();
 
 </script>

@@ -11,6 +11,7 @@ const messageSchema = new Schema(
 	  	lu			: { type: String, required: true },
 	  	archive		: { type: String, required: true },
 	  	signalement	: { type: Boolean, required: true },
+	  	priority_level : { type: String, required: true },
 	  	objet 		: { type: String,
       				enum: [
         				"HARCELEMENT PHYSIQUE",

@@ -40,6 +40,18 @@
     color: #232943;
   }
 
+  .normal{
+    color: #ffcd44;
+  }
+
+  .important{
+    color: #e77606;
+  }
+
+  .urgent{
+    color: #de5347;
+  }
+
 </style>
 {{#if user}}
 
@@ -57,14 +69,14 @@
 
 <br>
 
-
 <div id="message_non_lu">
 
 <table style="border: lavender 3px solid;">
   <tr>
-    <th class="lavend" colspan="5">Messages non lus</th>
+    <th class="lavend" colspan="6">Messages non lus</th>
   </tr>
   <tr>
+    <td class="entete">&nbsp;</td>
     <td class="entete">De</td>
     <td class="entete">Date</td>
     <td class="entete">Sujet</td>
@@ -75,7 +87,7 @@
   {{#if message_non_lu_public}}
     {{#each message_non_lu_public}}
     <tr>
-
+    <td class="{{priority_level}}">&#9873;</td>
         {{#each emetteur}}
           <td>{{username}} - {{nom}} {{prenom}}</td>
         {{/each}}
@@ -95,12 +107,13 @@
   </tr>
     {{/each}}
     {{else}}
-    <tr><td colspan="5">Pas de nouveau message</td></tr>
+    <tr><td colspan="6">Pas de nouveau message</td></tr>
   {{/if}}
-  <tr><td class="lavend" colspan="5"><i>Messages Anonymes</i></td></tr>
+  <tr><td class="lavend" colspan="6"><i>Messages Anonymes</i></td></tr>
   {{#if message_non_lu_anon}}
   {{#each message_non_lu_anon}}
   <tr>
+    <td class="{{priority_level}}">&#9873;</td>
     <td>Anonyme</td>
     <td>{{created_at}}</td>
     <td>{{sujet}}</td>
@@ -117,7 +130,7 @@
   </tr>
   {{/each}}
   {{else}}
-    <tr><td colspan="5">Pas de nouveau message</td></tr>
+    <tr><td colspan="6">Pas de nouveau message</td></tr>
   {{/if}}
  </table>
 </div>
@@ -127,7 +140,7 @@
 <div id="message_lu">
  <table>
   <tr>
-    <th colspan="5">Messages lus</th>
+    <th colspan="6">Messages lus</th>
   </tr>
   <tr>
     <td class="entete">De</td>
@@ -157,7 +170,7 @@
     </tr>
   {{/each}}
   {{/if}}
-  <tr><td class="anon" colspan="5">Messages Anonymes</td></tr>
+  <tr><td class="anon" colspan="6">Messages Anonymes</td></tr>
   {{#if message_lu_anon}}
   {{#each message_lu_anon}}
     <tr>

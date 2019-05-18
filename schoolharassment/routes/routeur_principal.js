@@ -695,6 +695,7 @@ router.post(
     const objet     = req.body.objet;
     const archive   = req.body.archive;
     const signalement   = req.body.signalement;
+    const priority_level = req.body.priority_level;
 
     if (sujet === "" || contenu === "") {
       res.render("principal/creation_message", {
@@ -720,7 +721,8 @@ router.post(
         lu,
         objet,
         archive,
-        signalement
+        signalement,
+        priority_level
       });
 
       newMessage
@@ -807,6 +809,8 @@ router.post(
     const objet = req.body.objet;
     const archive = req.body.archive;
     const signalement = req.body.signalement;
+    const priority_level = req.body.priority_level;
+    
 
     if (sujet === "" || contenu === "") {
       res.render("principal/reponse_message", {
@@ -832,7 +836,8 @@ router.post(
         lu,
         objet,
         archive,
-        signalement
+        signalement,
+        priority_level
       });
 
       newMessage
@@ -848,9 +853,6 @@ router.post(
     });
   }
 );
-
-
-
 
 
 // h) METHOD GET DETAIL MESSAGE
