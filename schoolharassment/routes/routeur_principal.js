@@ -876,32 +876,7 @@ router.post(
 
 // a) METHOD GET RAPPORT TYPE HARCELEMENT MOIS EN COURS
 
-<<<<<<< HEAD
-var date = new Date();
-var res = date.toISOString();
-var a = res.slice(0, 8);
-var start = a + "01";
-var end = a + "31";
-var debut_annee = res.slice(0, 4) + "-01-01";
-var fin_annee = res.slice(0, 4) + "-12-31";
 
-router.get(
-  "/principal/rapport",
-  checkPrincipal,
-  ensureLogin.ensureLoggedIn(),
-  (req, res, next) => {
-    Message.find({ created_at: { $gte: start, $lt: end } })
-      .count({ objet: "HARCELEMENT PHYSIQUE" })
-      .then(category_hp_mois => {
-        Message.find({ created_at: { $gte: debut_annee, $lt: fin_annee } })
-          .count({ objet: "HARCELEMENT PHYSIQUE" })
-          .then(category_hp_annee => {
-            Message.find({ created_at: { $gte: start, $lt: end } })
-              .count({ objet: "HARCELEMENT VERBAL" })
-              .then(category_hv_mois => {
-                Message.find({
-                  created_at: { $gte: debut_annee, $lt: fin_annee }
-=======
 var date  = new Date();
 var res   = date.toISOString();
 var a     = res.slice(0, 8)
@@ -942,99 +917,13 @@ router.get("/principal/rapport", checkPrincipal, ensureLogin.ensureLoggedIn(), (
                       })
                     })
                   })
->>>>>>> 17fc979db1d5896bed947c86473924d543f75971
                 })
-                  .count({ objet: "HARCELEMENT VERBAL" })
-                  .then(category_hv_annee => {
-                    Message.find({ created_at: { $gte: start, $lt: end } })
-                      .count({ objet: "CYBERHARCELEMENT" })
-                      .then(category_cy_mois => {
-                        Message.find({
-                          created_at: { $gte: debut_annee, $lt: fin_annee }
-                        })
-                          .count({ objet: "CYBERHARCELEMENT" })
-                          .then(category_cy_annee => {
-                            Message.find({
-                              created_at: { $gte: start, $lt: end }
-                            })
-                              .count({ objet: "HARCELEMENT SOCIAL" })
-                              .then(category_hso_mois => {
-                                Message.find({
-                                  created_at: {
-                                    $gte: debut_annee,
-                                    $lt: fin_annee
-                                  }
-                                })
-                                  .count({ objet: "HARCELEMENT SOCIAL" })
-                                  .then(category_hso_annee => {
-                                    Message.find({
-                                      created_at: { $gte: start, $lt: end }
-                                    })
-                                      .count({ objet: "HARCELEMENT SEXUEL" })
-                                      .then(category_hse_mois => {
-                                        Message.find({
-                                          created_at: {
-                                            $gte: debut_annee,
-                                            $lt: fin_annee
-                                          }
-                                        })
-                                          .count({
-                                            objet: "HARCELEMENT SEXUEL"
-                                          })
-                                          .then(category_hse_annee => {
-                                            Message.find({
-                                              created_at: {
-                                                $gte: start,
-                                                $lt: end
-                                              }
-                                            })
-                                              .count({
-                                                objet:
-                                                  "AUTRE TYPE DE HARCELEMENT"
-                                              })
-                                              .then(category_ah_mois => {
-                                                Message.find({
-                                                  created_at: {
-                                                    $gte: debut_annee,
-                                                    $lt: fin_annee
-                                                  }
-                                                })
-                                                  .count({
-                                                    objet:
-                                                      "AUTRE TYPE DE HARCELEMENT"
-                                                  })
-                                                  .then(category_ah_annee => {
-                                                    res.render(
-                                                      "principal/rapport",
-                                                      {
-                                                        layout:
-                                                          "layout_principal.hbs",
-                                                        category_hp_mois,
-                                                        category_hv_mois,
-                                                        category_cy_mois,
-                                                        category_hso_mois,
-                                                        category_hse_mois,
-                                                        category_ah_mois,
-                                                        category_hp_annee,
-                                                        category_hv_annee,
-                                                        category_cy_annee,
-                                                        category_hso_annee,
-                                                        category_hse_annee,
-                                                        category_ah_annee
-                                                      }
-                                                    );
-                                                  });
-                                              });
-                                          });
-                                      });
-                                  });
-                              });
-                          });
-                      });
-                  });
-              });
-          });
+              })
+            })
+          })
+        })
       })
+    })
       .catch(error => {
         console.log(error);
       });
