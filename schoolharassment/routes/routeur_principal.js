@@ -876,32 +876,6 @@ router.post(
 
 // a) METHOD GET RAPPORT TYPE HARCELEMENT MOIS EN COURS
 
-<<<<<<< HEAD
-var date = new Date();
-var res = date.toISOString();
-var a = res.slice(0, 8);
-var start = a + "01";
-var end = a + "31";
-var debut_annee = res.slice(0, 4) + "-01-01";
-var fin_annee = res.slice(0, 4) + "-12-31";
-
-router.get(
-  "/principal/rapport",
-  checkPrincipal,
-  ensureLogin.ensureLoggedIn(),
-  (req, res, next) => {
-    Message.find({ created_at: { $gte: start, $lt: end } })
-      .count({ objet: "HARCELEMENT PHYSIQUE" })
-      .then(category_hp_mois => {
-        Message.find({ created_at: { $gte: debut_annee, $lt: fin_annee } })
-          .count({ objet: "HARCELEMENT PHYSIQUE" })
-          .then(category_hp_annee => {
-            Message.find({ created_at: { $gte: start, $lt: end } })
-              .count({ objet: "HARCELEMENT VERBAL" })
-              .then(category_hv_mois => {
-                Message.find({
-                  created_at: { $gte: debut_annee, $lt: fin_annee }
-=======
 var date  = new Date();
 var res   = date.toISOString();
 var a     = res.slice(0, 8)
@@ -942,7 +916,6 @@ router.get("/principal/rapport", checkPrincipal, ensureLogin.ensureLoggedIn(), (
                       })
                     })
                   })
->>>>>>> 17fc979db1d5896bed947c86473924d543f75971
                 })
                   .count({ objet: "HARCELEMENT VERBAL" })
                   .then(category_hv_annee => {
