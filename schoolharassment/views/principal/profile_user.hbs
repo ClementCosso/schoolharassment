@@ -5,15 +5,21 @@
     <ul>
         <li>Nom : {{user.nom}}</li>
         <li>Prénom : {{user.prenom}}</li>
-        <li>Classe : {{user.classe}}</li>
+        {{#if user.classe }}<li>Classe : {{user.classe}}</li>{{/if}}
         <li>Email : {{user.username}}</li>
         <li>Numéro de téléphone : {{user.telephone}}</li>
         <li>Genre : {{user.genre}}</li>
 
     </ul>
+
+    {{#if user.classe }}
     <hr>
-    <br>
     <h2>Parent référent</h2>
     <p>{{user.parent_nom}} {{user.parent_prenom}}<br>{{user.parent_email}}<br>{{user.parent_telephone}}</p>
+    <a style="padding: 10px;
+border: 2px solid white;" HREF="mailto:{{user.parent_email}}">Contacter par mail</a>
+    <a style="padding: 10px;
+border: 2px solid white;" href="tel:{{user.parent_telephone}}">Contacter par téléphone</a>
+    {{/if}}
 
 </section>

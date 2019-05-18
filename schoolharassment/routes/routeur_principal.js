@@ -849,6 +849,10 @@ router.post(
   }
 );
 
+
+
+
+
 // h) METHOD GET DETAIL MESSAGE
 router.get(
   "/principal/:id/detail_message",
@@ -858,10 +862,17 @@ router.get(
     Message.findOne({ _id: req.params.id })
       .populate("recepteur", "nom prenom username")
       .then(reponse_message => {
+        Message.find({ $and: [
+                          { _id: { $eq: req.params.id } },
+                          { statut: { $eq: "PUBLIC" } }
+                        ]})
+        .then(public => {
         res.render("principal/detail_message", {
           layout: "layout_principal.hbs",
-          reponse_message: reponse_message
+          reponse_message: reponse_message,
+          public: public
         });
+      });
       })
       .catch(error => {
         console.log(error);
