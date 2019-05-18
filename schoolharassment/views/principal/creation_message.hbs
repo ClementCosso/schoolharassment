@@ -1,7 +1,7 @@
 <h2>Nouveau message<h2>
 
 <form action="/principal/creation_message" method="POST" id="form-container">
-
+<input id="signalement" type="hidden" name="signalement" value="false">
 	<input id="emetteur" type="hidden" name="emetteur" value="{{user._id}}">
     <input id="statut" type="hidden" name="statut" value="PUBLIC">
     <input id="lu" type="hidden" name="lu" value="NON">

@@ -8,7 +8,7 @@
 </div>
 
 <form action="/eleve/reponse_message" method="POST" id="form-container">
-
+<input id="signalement" type="hidden" name="signalement" value="false">
 	<input id="emetteur" type="hidden" name="emetteur" value="{{reponse_message.recepteur}}">
 	<input id="recepteur" type="hidden" name="recepteur" value="{{reponse_message.emetteur}}">
     <input id="statut" type="hidden" name="statut" value="{{reponse_message.statut}}">

@@ -1,3 +1,9 @@
+<style>
+  #parent {
+    display: block;
+  }
+</style>
+
 <h2>Création d'un nouvel utilisateur</h2>
 
 <form action="/principal/signup" method="POST" id="form-container">
@@ -32,8 +38,8 @@
 
   <br><br>
 
- <label for="role">Role</label>
-  <select name="role" id="role">
+  <label for="role">Role</label>
+  <select name="role" id="role" onchange="myFunction()">
     <option value="ELEVE">ELEVE</option>
     <option value="PROFESSEUR.E">PROFESSEUR.E</option>
     <option value="CPE">CPE</option>
@@ -52,48 +58,50 @@
 
   <br><br>
 
-   <!-- <input id="etablissement" type="hidden" name="etablissement" value="5cc6fe20b6b135051e8639cc"> -->
+  <!-- <input id="etablissement" type="hidden" name="etablissement" value="5cc6fe20b6b135051e8639cc"> -->
 
   <label for="etablissement">Etablissement</label>
-    <select name="etablissement" id="etablissement">
-      {{#each etablissements}}
-        <option value="{{_id}}">{{nom}}</option>
-      {{/each}}
-    </select>
+  <select name="etablissement" id="etablissement">
+    {{#each etablissements}}
+    <option value="{{_id}}">{{nom}}</option>
+    {{/each}}
+  </select>
 
   <br><br>
 
-  <h4>Parent référent</h4>
+  <div id="parent">
+    <h4>Parent référent</h4>
 
-  <hr>
+    <hr>
 
-  <label for="parent_nom">Nom</label>
-  <input id="parent_nom" type="text" name="parent_nom">
+    <label for="parent_nom">Nom</label>
+    <input id="parent_nom" type="text" name="parent_nom">
 
-  <br><br>
+    <br><br>
 
-  <label for="parent_prenom">Prénom</label>
-  <input id="parent_prenom" type="text" name="parent_prenom">
+    <label for="parent_prenom">Prénom</label>
+    <input id="parent_prenom" type="text" name="parent_prenom">
 
-  <br><br>
+    <br><br>
 
-  <label for="parent_email">Email</label>
-  <input id="parent_email" type="text" name="parent_email">
+    <label for="parent_email">Email</label>
+    <input id="parent_email" type="text" name="parent_email">
 
-  <br><br>
+    <br><br>
 
-  <label for="parent_telephone">Telephone</label>
-  <input id="parent_telephone" type="text" name="parent_telephone">
-
+    <label for="parent_telephone">Telephone</label>
+    <input id="parent_telephone" type="text" name="parent_telephone">
+  </div>
   <br><br>
 
   <label for="password">Mot de passe</label>
   <input id="password" type="password" name="password" placeholder="Mot de passe">
 
+
   <br>
-  
+
   {{#if message }}
-    <div class="error-message">{{ message }}</div>
+  <div class="error-message">{{ message }}</div>
   {{/if}}
 
   <br><br>
@@ -103,3 +111,17 @@
   <br><br>
 
 </form>
+<script>
+  function myFunction() {
+    var d = document.getElementById("parent");
+    var x = document.getElementById("role").value;
+
+    if (x != 'ELEVE') {
+      d.style.display = "none";
+    } else {
+      d.style.display = "block";
+    }
+
+
+  }
+</script>
