@@ -1,0 +1,19 @@
+<h1>Profil de {{user.prenom}} {{user.nom}}</h1>
+
+<h2>Informations détaillées</h2>
+<section>
+    <ul>
+        <li>Nom : {{user.nom}}</li>
+        <li>Prénom : {{user.prenom}}</li>
+        <li>Classe : {{user.classe}}</li>
+        <li>Email : {{user.username}}</li>
+        <li>Numéro de téléphone : {{user.telephone}}</li>
+        <li>Genre : {{user.genre}}</li>
+
+    </ul>
+    <hr>
+    <br>
+    <h2>Parent référent</h2>
+    <p>{{user.parent_nom}} {{user.parent_prenom}}<br>{{user.parent_email}}<br>{{user.parent_telephone}}</p>
+
+</section>
