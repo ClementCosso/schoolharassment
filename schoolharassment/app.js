@@ -74,6 +74,9 @@ app.use(
 app.use(flash());
 require("./passport")(app);
 
+const landing = require("./routes/landing");
+app.use("/", landing);
+
 const authRoutes = require("./routes/auth");
 app.use("/auth", authRoutes);
 
