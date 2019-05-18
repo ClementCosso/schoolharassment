@@ -417,6 +417,22 @@ router.post("/principal/:id/liste_utilisateur", (req, res, next) => {
   });
 });
 
+// h) METHOD GET PAGE PROFILE UTILISATEUR
+
+router.get("/principal/:id/profile_user", (req, res, next) => {
+  User.findOne({ _id: req.params.id })
+    .then(user => {
+      res.render("principal/profile_user", {
+        layout: "layout_principal.hbs",
+        user: user
+      });
+    })
+    .catch(error => {
+      console.log(error);
+    });
+});
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           4/ E T A B L I S S E M E N T S                                                 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

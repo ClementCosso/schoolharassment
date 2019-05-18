@@ -27,6 +27,10 @@ document.addEventListener(
         </p>
   
         <div style="display: flex;">
+        <h5 style="border: 2px solid white; padding: 10px; width: 133px; text-align: center; text-transform: uppercase; height:40px">
+            <a href="/principal/${user._id}/profile_user">Détail</a>
+          </h5>
+          &nbsp;
           <h5 style="border: 2px solid white; padding: 10px; width: 133px; text-align: center; text-transform: uppercase; height:40px">
             <a href="/principal/${user._id}/update_user">Modifier</a>
           </h5>
