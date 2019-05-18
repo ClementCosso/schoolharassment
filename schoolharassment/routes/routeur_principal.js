@@ -672,13 +672,13 @@ router.post(
   (req, res, next) => {
     const emetteur = req.body.emetteur;
     const recepteur = req.body.recepteur;
-    const sujet     = req.body.sujet;
-    const contenu   = req.body.contenu;
-    const statut    = req.body.statut;
-    const lu        = req.body.lu;
-    const objet     = req.body.objet;
-    const archive   = req.body.archive;
-    const signalement   = req.body.signalement;
+    const sujet = req.body.sujet;
+    const contenu = req.body.contenu;
+    const statut = req.body.statut;
+    const lu = req.body.lu;
+    const objet = req.body.objet;
+    const archive = req.body.archive;
+    const signalement = req.body.signalement;
 
     if (sujet === "" || contenu === "") {
       res.render("principal/creation_message", {
@@ -876,61 +876,80 @@ router.post(
 
 // a) METHOD GET RAPPORT TYPE HARCELEMENT MOIS EN COURS
 
-var date  = new Date();
-var res   = date.toISOString();
-var a     = res.slice(0, 8)
-var start = a+"01";
-var end   = a+"31";
-var debut_annee = res.slice(0,4)+"-01-01";
-var fin_annee = res.slice(0,4)+"-12-31";
+var date = new Date();
+var res = date.toISOString();
+var a = res.slice(0, 8);
+var start = a + "01";
+var end = a + "31";
+var debut_annee = res.slice(0, 4) + "-01-01";
+var fin_annee = res.slice(0, 4) + "-12-31";
 
-
-router.get("/principal/rapport", checkPrincipal, ensureLogin.ensureLoggedIn(), (req, res, next) => {
-    Message.find({ created_at: { $gte: (start), $lt : (end) } }).count({ $and: [ {objet: {$eq: "HARCELEMENT PHYSIQUE"}}, {signalement: {$eq: true}} ]})
-    .then(category_hp_mois => {
-       Message.find({ created_at: { $gte: (debut_annee), $lt : (fin_annee) } }).count({ $and: [ {objet: {$eq: "HARCELEMENT PHYSIQUE"}}, {signalement: {$eq: true}} ]})
-      .then(category_hp_annee => {
-        Message.find({ created_at: { $gte: (start), $lt : (end) } }).count({ $and: [ {objet: {$eq: "HARCELEMENT VERBAL"}}, {signalement: {$eq: true}} ]})
-        .then(category_hv_mois => {
-          Message.find({ created_at: { $gte: (debut_annee), $lt : (fin_annee) } }).count({ $and: [ {objet: {$eq: "HARCELEMENT VERBAL"}}, {signalement: {$eq: true}} ]})
-          .then(category_hv_annee => {
-            Message.find({ created_at: { $gte: (start), $lt : (end) } }).count({ $and: [ {objet: {$eq: "CYBERHARCELEMENT"}}, {signalement: {$eq: true}} ]})
-            .then(category_cy_mois => {
-              Message.find({ created_at: { $gte: (debut_annee), $lt : (fin_annee) } }).count({ $and: [ {objet: {$eq: "CYBERHARCELEMENT"}}, {signalement: {$eq: true}} ]})
-              .then(category_cy_annee => {
-                Message.find({ created_at: { $gte: (start), $lt : (end) } }).count({ $and: [ {objet: {$eq: "HARCELEMENT SOCIAL"}}, {signalement: {$eq: true}} ]})
-                .then(category_hso_mois => {
-                  Message.find({ created_at: { $gte: (debut_annee), $lt : (fin_annee) } }).count({ $and: [ {objet: {$eq: "HARCELEMENT SOCIAL"}}, {signalement: {$eq: true}} ]})
-                  .then(category_hso_annee => {
-                    Message.find({ created_at: { $gte: (start), $lt : (end) } }).count({ $and: [ {objet: {$eq: "HARCELEMENT SEXUEL"}}, {signalement: {$eq: true}} ]})
-                    .then(category_hse_mois => {
-                      Message.find({ created_at: { $gte: (debut_annee), $lt : (fin_annee) } }).count({ $and: [ {objet: {$eq: "HARCELEMENT SEXUEL"}}, {signalement: {$eq: true}} ]})
-                      .then(category_hse_annee => {
-                        Message.find({ created_at: { $gte: (start), $lt : (end) } }).count({ $and: [ {objet: {$eq: "AUTRE TYPE DE HARCELEMENT"}}, {signalement: {$eq: true}} ]})
-                        .then(category_ah_mois => {
-                          Message.find({ created_at: { $gte: (debut_annee), $lt : (fin_annee) } }).count({ $and: [ {objet: {$eq: "AUTRE TYPE DE HARCELEMENT"}}, {signalement: {$eq: true}} ]})
-                          .then(category_ah_annee => {
-                            res.render("principal/rapport", { layout: "layout_principal.hbs", category_hp_mois, category_hv_mois, category_cy_mois, category_hso_mois, category_hse_mois, category_ah_mois, category_hp_annee, category_hv_annee, category_cy_annee, category_hso_annee, category_hse_annee, category_ah_annee });
-                          })
-                        })
-                      })
-                    })
-                  })
+router.get(
+  "/principal/rapport",
+  checkPrincipal,
+  ensureLogin.ensureLoggedIn(),
+  (req, res, next) => {
+    Message.find({ created_at: { $gte: start, $lt: end } })
+      .count({
+        $and: [
+          { objet: { $eq: "HARCELEMENT PHYSIQUE" } },
+          { signalement: { $eq: true } }
+        ]
+      })
+      .then(category_hp_mois => {
+        Message.find({ created_at: { $gte: debut_annee, $lt: fin_annee } })
+          .count({
+            $and: [
+              { objet: { $eq: "HARCELEMENT PHYSIQUE" } },
+              { signalement: { $eq: true } }
+            ]
+          })
+          .then(category_hp_annee => {
+            Message.find({ created_at: { $gte: start, $lt: end } })
+              .count({
+                $and: [
+                  { objet: { $eq: "HARCELEMENT VERBAL" } },
+                  { signalement: { $eq: true } }
+                ]
+              })
+              .then(category_hv_mois => {
+                Message.find({
+                  created_at: { $gte: debut_annee, $lt: fin_annee }
                 })
-                  .count({ objet: "HARCELEMENT VERBAL" })
+                  .count({
+                    $and: [
+                      { objet: { $eq: "HARCELEMENT VERBAL" } },
+                      { signalement: { $eq: true } }
+                    ]
+                  })
                   .then(category_hv_annee => {
                     Message.find({ created_at: { $gte: start, $lt: end } })
-                      .count({ objet: "CYBERHARCELEMENT" })
+                      .count({
+                        $and: [
+                          { objet: { $eq: "CYBERHARCELEMENT" } },
+                          { signalement: { $eq: true } }
+                        ]
+                      })
                       .then(category_cy_mois => {
                         Message.find({
                           created_at: { $gte: debut_annee, $lt: fin_annee }
                         })
-                          .count({ objet: "CYBERHARCELEMENT" })
+                          .count({
+                            $and: [
+                              { objet: { $eq: "CYBERHARCELEMENT" } },
+                              { signalement: { $eq: true } }
+                            ]
+                          })
                           .then(category_cy_annee => {
                             Message.find({
                               created_at: { $gte: start, $lt: end }
                             })
-                              .count({ objet: "HARCELEMENT SOCIAL" })
+                              .count({
+                                $and: [
+                                  { objet: { $eq: "HARCELEMENT SOCIAL" } },
+                                  { signalement: { $eq: true } }
+                                ]
+                              })
                               .then(category_hso_mois => {
                                 Message.find({
                                   created_at: {
@@ -938,12 +957,24 @@ router.get("/principal/rapport", checkPrincipal, ensureLogin.ensureLoggedIn(), (
                                     $lt: fin_annee
                                   }
                                 })
-                                  .count({ objet: "HARCELEMENT SOCIAL" })
+                                  .count({
+                                    $and: [
+                                      { objet: { $eq: "HARCELEMENT SOCIAL" } },
+                                      { signalement: { $eq: true } }
+                                    ]
+                                  })
                                   .then(category_hso_annee => {
                                     Message.find({
                                       created_at: { $gte: start, $lt: end }
                                     })
-                                      .count({ objet: "HARCELEMENT SEXUEL" })
+                                      .count({
+                                        $and: [
+                                          {
+                                            objet: { $eq: "HARCELEMENT SEXUEL" }
+                                          },
+                                          { signalement: { $eq: true } }
+                                        ]
+                                      })
                                       .then(category_hse_mois => {
                                         Message.find({
                                           created_at: {
@@ -952,7 +983,14 @@ router.get("/principal/rapport", checkPrincipal, ensureLogin.ensureLoggedIn(), (
                                           }
                                         })
                                           .count({
-                                            objet: "HARCELEMENT SEXUEL"
+                                            $and: [
+                                              {
+                                                objet: {
+                                                  $eq: "HARCELEMENT SEXUEL"
+                                                }
+                                              },
+                                              { signalement: { $eq: true } }
+                                            ]
                                           })
                                           .then(category_hse_annee => {
                                             Message.find({
@@ -962,8 +1000,15 @@ router.get("/principal/rapport", checkPrincipal, ensureLogin.ensureLoggedIn(), (
                                               }
                                             })
                                               .count({
-                                                objet:
-                                                  "AUTRE TYPE DE HARCELEMENT"
+                                                $and: [
+                                                  {
+                                                    objet: {
+                                                      $eq:
+                                                        "AUTRE TYPE DE HARCELEMENT"
+                                                    }
+                                                  },
+                                                  { signalement: { $eq: true } }
+                                                ]
                                               })
                                               .then(category_ah_mois => {
                                                 Message.find({
@@ -973,8 +1018,19 @@ router.get("/principal/rapport", checkPrincipal, ensureLogin.ensureLoggedIn(), (
                                                   }
                                                 })
                                                   .count({
-                                                    objet:
-                                                      "AUTRE TYPE DE HARCELEMENT"
+                                                    $and: [
+                                                      {
+                                                        objet: {
+                                                          $eq:
+                                                            "AUTRE TYPE DE HARCELEMENT"
+                                                        }
+                                                      },
+                                                      {
+                                                        signalement: {
+                                                          $eq: true
+                                                        }
+                                                      }
+                                                    ]
                                                   })
                                                   .then(category_ah_annee => {
                                                     res.render(

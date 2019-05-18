@@ -3,7 +3,7 @@
 <html>
 
 <head>
-  <title>Landing Page</title>
+  <title>SAFETY</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <style>
@@ -21,30 +21,34 @@
 
 <body class="is-preload">
 
+
   <!-- Wrapper -->
 
   <div>
 
     <!-- Header -->
     <!-- Note: The "styleN" class below should match that of the banner element. -->
-    {{!-- <header id="header" class="alt style2">
+    <header id="header" class="alt style2">
+
+      <img src="/images/Logo.png" alt="" height="auto" class="logo">
+
 
       <nav>
         <a href="#menu">Menu</a>
       </nav>
-    </header> --}}
+    </header>
 
     <!-- Menu -->
     <nav id="menu">
-      {{!-- <ul class="links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="landing.html">Landing</a></li>
-        <li><a href="generic.html">Generic</a></li>
-        <li><a href="elements.html">Elements</a></li>
-      </ul> --}}
+      <ul class="links">
+        <li><a href="/mode_emploi">Mode d'emploi</a></li>
+        <li><a href="elements.html">Contact</a></li>
+        <li><a href="https://www.nonauharcelement.education.gouv.fr/que-faire/le-harcelement-cest-quoi/"
+            target="_new">Ressources
+            officielles</a></li>
+      </ul>
       <ul class="actions stacked">
-        <li><a href="#" class="button next">Get Started</a></li>
-        <li><a href="#" class="button fit">Log In</a></li>
+        <li><a href="/auth/login" class="button fit">Se connecter</a></li>
       </ul>
     </nav>
 
@@ -53,70 +57,79 @@
     <section id="banner" class="style2">
       <div class="inner">
         <span class="image">
-          <img src="images/pic07.jpg" alt="" />
+          <img src="/images/pic07.jpg" alt="" />
         </span>
         <header class="major ">
-          <h1>B U L L Y I N G</h1>
+          <h1>S A F E T Y</h1>
         </header>
         <div class="content">
-          <p>Une application simple et bienveillante<br />
-            pour prendre soin de ses camarades, en toute discrétion.</p><a href="/mode_emploi" class="button next">Mode
-            d'emploi</a>
+          <p>L'app qui met tout le monde ok</p><a href="/auth/login" class="button next">Se
+            connecter</a>
         </div>
       </div>
     </section>
 
     <!-- Main -->
     <div id="main">
+      {{!-- <section>
+        <div class="contact-method">
+          <img src="/images/BANNER.jpg" alt="" width="100%" height="auto">
+        </div>
+      </section> --}}
 
       <!-- One -->
       <section id="one">
         <div class="inner">
           <header class="major">
-            <h2>Sed amet aliquam</h2>
+            <h2>A N O N Y M E</h2>
           </header>
-          <p>Nullam et orci eu lorem consequat tincidunt vivamus et sagittis magna sed nunc rhoncus condimentum sem. In
-            efficitur ligula tate urna. Maecenas massa vel lacinia pellentesque lorem ipsum dolor. Nullam et orci eu
-            lorem consequat tincidunt. Vivamus et sagittis libero. Nullam et orci eu lorem consequat tincidunt vivamus
-            et sagittis magna sed nunc rhoncus condimentum sem. In efficitur ligula tate urna.</p>
+          <div class="content">
+            <p class="content">PRENDRE LA PAROLE PUBLIQUEMENT POUR DENONCER LE HARCELEMENT PEUT ÊTRE DISSUASIF.
+              <br>SUR L'APPLICATION <strong>S A F E T Y </strong> , VOUS AUREZ TOUJOURS LE CHOIX DE RESTER ANONYMES
+              SI VOUS LE SOUHAITEZ.
+            </p>
+          </div>
         </div>
       </section>
 
       <section id="one" class="tiles">
         <article>
           <span class="image">
-            <img src="images/pic01.jpg" alt="" />
+            <img src="/images/pic01.jpg" alt="picture 01" />
           </span>
           <header class="major">
-            <h3><a href="landing.html" class="link">Aliquam</a></h3>
-            <p>Ipsum dolor sit amet</p>
+            <h3>Eleves</h3>
+            <p><strong>SAFETY</strong> permet aux victimes de se confier ou aux témoins de signaler tout cas de
+              harcèlement. Dans l'anonymat le plus strict.
+            </p>
           </header>
         </article>
         <article>
           <span class="image">
-            <img src="images/pic02.jpg" alt="" />
+            <img src="/images/pic02.jpg" alt="" />
           </span>
           <header class="major">
-            <h3><a href="landing.html" class="link">Tempus</a></h3>
-            <p>feugiat amet tempus</p>
+            <h3>Proviseur.e</h3>
+            <p>Le bienêtre de vos élèves vous importe? <br>Ouvrez le canal de communication</p>
           </header>
         </article>
         <article>
           <span class="image">
-            <img src="images/pic03.jpg" alt="" />
+            <img src="/images/pic03.jpg" alt="" />
           </span>
           <header class="major">
-            <h3><a href="landing.html" class="link">Magna</a></h3>
-            <p>Lorem etiam nullam</p>
+            <h3>Membre de l'administration, Corps enseignant</h3>
+            <p>Votre proximité avec les élèves fait de vous un interlocteur parfois privilégié.<br>Vous avez un rôle à
+              jouer</p>
           </header>
         </article>
         <article>
           <span class="image">
-            <img src="images/pic04.jpg" alt="" />
+            <img src="/images/pic04.jpg" alt="" />
           </span>
           <header class="major">
-            <h3><a href="landing.html" class="link">Ipsum</a></h3>
-            <p>Nisl sed aliquam</p>
+            <h3>Parents</h3>
+            <p>Votre pensez que votre enfant est victime de harcèlement ? Il peut enfin se confier.</p>
           </header>
         </article>
 
@@ -126,10 +139,10 @@
     <section id="contact">
       <div class="inner">
         <section>
-          <form method="post" action="#">
+          <form>
             <div class="fields">
               <div class="field half">
-                <label for="name">Name</label>
+                <label for="name">Votre nom</label>
                 <input type="text" name="name" id="name" />
               </div>
               <div class="field half">
@@ -142,7 +155,9 @@
               </div>
             </div>
             <ul class="actions">
-              <li><input type="submit" value="Send Message" class="primary" /></li>
+              <li>
+                <div class="button">Envoyer</div>
+              </li>
               <li><input type="reset" value="Clear" /></li>
             </ul>
           </form>
