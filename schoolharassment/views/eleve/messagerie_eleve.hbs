@@ -1,9 +1,47 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
 <style>
   .box{
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    background: #4B4F65;
   }
+
+  .box
+{
+    position:relative;
+    -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+       -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+            box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+}
+.box:before, .box:after
+{
+    content:"";
+    position:absolute;
+    z-index:-1;
+    -webkit-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    -moz-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    box-shadow:0 0 20px rgba(0,0,0,0.8);
+    top:0;
+    bottom:0;
+    left:10px;
+    right:10px;
+    -moz-border-radius:100px / 10px;
+    border-radius:100px / 10px;
+}
+.box:after
+{
+    right:10px;
+    left:auto;
+    -webkit-transform:skew(8deg) rotate(3deg);
+       -moz-transform:skew(8deg) rotate(3deg);
+        -ms-transform:skew(8deg) rotate(3deg);
+         -o-transform:skew(8deg) rotate(3deg);
+            transform:skew(8deg) rotate(3deg);
+}
+
+
   #message_non_lu{
     display: block;
   }
@@ -35,19 +73,22 @@
     color: #232943;
   }
 
+  .flex_td{
+  display: flex;
+}
+
 </style>
 {{#if user}}
 
-  <h2>Messagerie de {{user.prenom}} {{user.nom}}</h2>
+  <h2>Mes messages</h2>
 
 {{/if}}
-<br>
 
 <div class="box">
-  <button id="tous" onclick="showAll()">Tous les messages</button>
-  <button id="recus" onclick="showReceived()">Messages reçus</button>
-  <button id="envoyes" onclick="showSend()">Messages envoyés</button>
-  <a href="/eleve/{{user._id}}/creation_message" class="button primary">Nouveau Message</a>
+  <button id="tous" onclick="showAll()"><i class="fas fa-inbox"></i> Tous les messages</button>
+  <button id="recus" onclick="showReceived()"><i class="fas fa-envelope-open-text"></i> Messages reçus</button>
+  <button id="envoyes" onclick="showSend()"><i class="fas fa-paper-plane"></i> Messages envoyés</button>
+  <a href="/eleve/{{user._id}}/creation_message" class="button primary"><i class="fas fa-edit"></i> Nouveau Message</a>
 </div>
 
 <br>
@@ -74,13 +115,13 @@
     <td>{{created_at}}</td>
     <td>{{sujet}}</td>
     <td>{{contenu}}</td>
-    <td>
-      <a class="button primary small" href="/eleve/{{this._id}}/detail_message">Voir</a>
-      <br><br>
-      <a class="button primary small" href="/eleve/{{this._id}}/reponse_message">Répondre</a>
-      <br><br>
+    <td class="flex_td">
+      <a class="button primary small" href="/eleve/{{this._id}}/detail_message"><i class="fas fa-search-plus"></i></a>
+      &nbsp;
+      <a class="button primary small" href="/eleve/{{this._id}}/reponse_message"><i class="fas fa-reply"></i></a>
+      &nbsp;
       <form action="/eleve/{{this._id}}/message_lu" method="POST">
-        <button class="btn primary small" type="submit">Lu</button>
+        <button class="btn primary small" type="submit"><i class="fas fa-check"></i></button>
       </form>
     </td>
    </tr>
@@ -113,13 +154,13 @@
     <td>{{created_at}}</td>
     <td>{{sujet}}</td>
     <td>{{contenu}}</td>
-    <td>
-      <a class="button primary small" href="/eleve/{{this._id}}/detail_message">Voir</a>
-      <br><br>
-      <a class="button small" href="/eleve/{{this._id}}/reponse_message">Répondre</a>
-      <br><br>
+    <td class="flex_td">
+      <a class="button primary small" href="/eleve/{{this._id}}/detail_message"><i class="fas fa-search-plus"></i></a>
+      &nbsp;
+      <a class="button small" href="/eleve/{{this._id}}/reponse_message"><i class="fas fa-reply"></i></a>
+      &nbsp;
       <form action="/eleve/{{this._id}}/delete_message" method="POST">
-        <button class="btn small" type="submit">Supprimer</button>
+        <button class="btn small" type="submit"><i class="fas fa-trash-alt"></i></button>
       </form>
     </td>
     </tr>
@@ -151,11 +192,11 @@
     <td>{{created_at}}</td>
     <td>{{sujet}}</td>
     <td>{{contenu}}</td>
-    <td>
-      <a class="button primary small" href="/eleve/{{this._id}}/detail_message">Voir</a>
-      <br><br>
+    <td class="flex_td">
+      <a class="button primary small" href="/eleve/{{this._id}}/detail_message"><i class="fas fa-search-plus"></i></a>
+      &nbsp;
         <form action="/eleve/{{this._id}}/archive_message" method="POST">
-            <button class="btn small" type="submit">Archiver</button>
+            <button class="btn small" type="submit"><i class="fas fa-trash-alt"></i></button>
         </form>
     </td>
     </tr>
