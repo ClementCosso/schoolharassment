@@ -601,6 +601,8 @@ router.get(
       })
         .populate("recepteur", "nom prenom username")
         .then(message_emis_public => {
+          console.log("message_emis_public")
+          console.log(message_emis_public)
           Message.find({
             $and: [
               { emetteur: { $eq: user._id } },

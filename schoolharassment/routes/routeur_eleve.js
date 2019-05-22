@@ -62,6 +62,9 @@ const Message = require("../models/Message");
 const bcrypt      = require("bcrypt");
 const bcryptSalt  = 10;
 
+// Moment.js
+const moment      = require('moment');
+
 // FONCTION ROLES
 function checkRoles(role) {
   return function(req, res, next) {
@@ -178,6 +181,13 @@ router.post('/eleve/edit', checkEleve, ensureLogin.ensureLoggedIn(), (req, res, 
 //                                                3/ M E S S A G E R I E                                                    //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function changeDesc(input) {
+   for (var i in object) {
+        object[i].created_at = moment(input ,"YYYY-MM-DDTHH:mm:ss.SSS").format("LLL");
+        break; //Stop this loop, we found it!
+     
+   }
+}
 
 // a) METHOD GET PAGE MESSAGERIE
 router.get(
@@ -189,22 +199,35 @@ router.get(
       Message.find({ $and : [ {emetteur: { $eq: user._id }}, {archive: { $eq: "NON" }} ] })
         .populate("recepteur", "nom prenom username")
         .then(message_emis => {
+          let message_emis_modified = message_emis.map(item => {
+                    item = {...item._doc, created_at: moment(item.created_at, "YYYY-MM-DDTHH:mm:ss.SSS").lang("fr").format("LLL")}
+                    return item;
+                    })
           Message.find({
             $and: [{ lu: { $eq: "OUI" } }, { recepteur: { $eq: user._id } }]
           })
             .populate("emetteur", "nom prenom username")
             .then(message_lu => {
+              let message_lu_modified = message_lu.map(item => {
+                    item = {...item._doc, created_at: moment(item.created_at, "YYYY-MM-DDTHH:mm:ss.SSS").lang("fr").format("LLL")}
+                    return item;
+                    })
               Message.find({
                 $and: [{ lu: { $eq: "NON" } }, { recepteur: { $eq: user._id } }]
               })
                 .populate("emetteur", "nom prenom username")
                 .then(message_non_lu => {
+                  let message_non_lu_modified = message_non_lu.map(item => {
+                    item = {...item._doc, created_at: moment(item.created_at, "YYYY-MM-DDTHH:mm:ss.SSS").lang("fr").format("LLL")}
+                    return item;
+                    }
+                  )
                   res.render("eleve/messagerie_eleve", {
                     layout: "layout_eleve.hbs",
                     user: user,
-                    message_emis: message_emis,
-                    message_lu: message_lu,
-                    message_non_lu: message_non_lu
+                    message_emis: message_emis_modified,
+                    message_lu: message_lu_modified,
+                    message_non_lu: message_non_lu_modified
                   });
                 });
             });
